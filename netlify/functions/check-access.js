@@ -56,8 +56,11 @@ exports.handler = async (event) => {
     }
 
     // Check for sacred-vault-member tag
-    const tags = (customer.tags || '').split(',').map(t => t.trim().toLowerCase());
-    const hasAccess = tags.includes('sacred-vault-member');
+    // Handle tags whether returned as string or array
+    let tagsRaw = customer.tags || '';
+    if (Array.isArray(tagsRaw)) tagsRaw = tagsRaw.join(',');
+    const tags = tagsRaw.split(',').map(t => t.trim().toLowerCase().replace(/\s+/g, '-'));
+    const hasAccess = tags.some(t => t === 'sacred-vault-member' || t.includes('sacred-vault-member'));
 
     if (!hasAccess) {
       return {
