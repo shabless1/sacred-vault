@@ -8,7 +8,7 @@ exports.handler = async (event) => {
 
     // Shopify Flow sends customer email, name, and order info
     const email = (payload.email || payload.customer_email || '').toLowerCase().trim();
-    const name = payload.first_name || payload.customer_first_name || 'Beloved';
+    const name = payload.firstName || payload.first_name || payload.customer_first_name || 'Beloved';
 
     if (!email) {
       console.log('No email in payload:', JSON.stringify(payload));
