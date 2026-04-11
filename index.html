@@ -384,35 +384,39 @@ audio{display:none;}
       <iframe id="pdf-frame" src="" style="width:100%;height:75vh;border:none;display:block;background:#1a1a1a;"></iframe>
     </div>
     <!-- Audio -->
-    <div class="audio-player" id="audio-view" style="display:none">
-      <div class="audio-art" id="audio-art">🎵</div>
-      <div class="eq-container" id="eq-bars">
-        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-      </div>
-      <div class="audio-info">
-        <div class="audio-title" id="audio-player-title">—</div>
-        <div class="audio-author" id="audio-player-author">—</div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
-          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    <div class="audio-player" id="audio-view" style="display:none;position:relative;overflow:hidden;">
+      <div id="audio-bg" style="position:absolute;inset:0;background-image:url(https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697);background-size:cover;background-position:center;filter:blur(28px);opacity:.4;z-index:0;transform:scale(1.15);"></div>
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;">
+        <div class="audio-art" id="audio-art">
+          <img id="audio-art-img" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"/>
         </div>
-        <div class="time-row"><span id="time-current">0:00</span><span id="time-total">0:00</span></div>
+        <div class="eq-container" id="eq-bars">
+          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        </div>
+        <div class="audio-info">
+          <div class="audio-title" id="audio-player-title">—</div>
+          <div class="audio-author" id="audio-player-author">—</div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+          <div class="time-row"><span id="time-current">0:00</span><span id="time-total">0:00</span></div>
+        </div>
+        <div class="controls">
+          <button class="ctrl-btn" id="prev-track-btn" onclick="prevTrack()" title="Previous track" style="display:none">⏪</button>
+          <button class="ctrl-btn" onclick="skipAudio(-15)" title="Back 15s">⏮</button>
+          <button class="ctrl-btn play-pause" id="play-pause-btn" onclick="togglePlay()">▶</button>
+          <button class="ctrl-btn" onclick="skipAudio(15)" title="Forward 15s">⏭</button>
+          <button class="ctrl-btn" id="next-track-btn" onclick="nextTrack()" title="Next track" style="display:none">⏩</button>
+        </div>
+        <div id="track-counter" style="display:none;font-size:.75rem;color:var(--text-dim);letter-spacing:.06em;text-align:center"></div>
+        <button class="btn-heart" id="player-heart-btn" onclick="togglePlayerHeart()" style="font-size:.85rem;padding:7px 18px;border:1px solid var(--border);border-radius:20px;background:rgba(0,0,0,.4);color:var(--text);cursor:pointer;letter-spacing:.04em;">♡ Save to Playlist</button>
+        <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" onloadedmetadata="onMetaLoad()"></audio>
       </div>
-      <div class="controls">
-        <button class="ctrl-btn" id="prev-track-btn" onclick="prevTrack()" title="Previous track" style="display:none">⏪</button>
-        <button class="ctrl-btn" onclick="skipAudio(-15)" title="Back 15s">⏮</button>
-        <button class="ctrl-btn play-pause" id="play-pause-btn" onclick="togglePlay()">▶</button>
-        <button class="ctrl-btn" onclick="skipAudio(15)" title="Forward 15s">⏭</button>
-        <button class="ctrl-btn" id="next-track-btn" onclick="nextTrack()" title="Next track" style="display:none">⏩</button>
-      </div>
-      <div id="track-counter" style="display:none;font-size:.75rem;color:var(--text-dim);letter-spacing:.06em;text-align:center"></div>
-      <p style="font-size:.72rem;color:rgba(240,234,214,.4);letter-spacing:.06em;">Use device volume to adjust</p>
-      <button class="btn-heart" id="player-heart-btn" onclick="togglePlayerHeart()" style="font-size:1.3rem;margin-top:4px;">♡</button>
-      <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" onloadedmetadata="onMetaLoad()"></audio>
     </div>
     <!-- Video -->
     <div class="video-player" id="video-view" style="display:none">
@@ -899,6 +903,7 @@ let currentAlbum=null, currentTrackIdx=0;
 // ── LOGIN ──
 // ── AUTH: Email lookup via Netlify function ──
 const SESSION_KEY = 'sv_session';
+const DEFAULT_COVER = 'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697';
 const SESSION_DAYS = 7;
 
 function loadSession(){
@@ -1039,8 +1044,7 @@ function playPlaylistTrack(idx){
   currentTrackIdx=idx;
   resetModal();
   document.getElementById('audio-view').style.display='flex';
-  document.getElementById('audio-art').textContent='♡';
-  document.getElementById('audio-art').style.background=currentAlbum.color;
+  setPlayerArt(null, '♡', currentAlbum.color);
   document.getElementById('audio-player-title').textContent=track.track_title;
   document.getElementById('audio-player-author').textContent='My Playlist · Track '+(idx+1)+' of '+userPlaylist.length;
   const a=document.getElementById('audio-el');
@@ -1232,18 +1236,8 @@ function openContent(id){
     return;
   } else {
     document.getElementById('audio-view').style.display='flex';
-    const art=document.getElementById('audio-art');
-    const artEmoji=document.getElementById('audio-art-emoji');
-    const audioBg=document.getElementById('audio-bg');
-    if(item.coverImg){
-      artEmoji.innerHTML='<img src="'+item.coverImg+'" style="width:100%;height:100%;object-fit:cover;" />';
-      audioBg.style.backgroundImage='url('+item.coverImg+')';
-    } else {
-      artEmoji.textContent=item.emoji;
-      audioBg.style.backgroundImage='none';
-      audioBg.style.background=item.color;
-    }
-    art.classList.remove('playing');
+    setPlayerArt(item.coverImg, item.emoji, item.color);
+    document.getElementById('audio-art').classList.remove('playing');
     setEQActive(false);
     document.getElementById('audio-player-title').textContent=item.title;
     document.getElementById('audio-player-author').textContent=item.subtitle||item.author;
@@ -1359,6 +1353,18 @@ function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-ove
 // PDF loaded via Google Drive iframe — no extra code needed
 
 // ── AUDIO ──
+function setPlayerArt(coverImg, emoji, color){
+  const img = document.getElementById('audio-art-img');
+  const emojiEl = document.getElementById('audio-art-emoji');
+  const bg = document.getElementById('audio-bg');
+  const cover = coverImg || DEFAULT_COVER;
+  img.src = cover;
+  img.style.display = 'block';
+  emojiEl.style.display = 'none';
+  bg.style.backgroundImage = 'url(' + cover + ')';
+  document.getElementById('audio-art').style.background = color || 'transparent';
+}
+
 function setEQActive(active){
   const bars=['eq1','eq2','eq3','eq4','eq5','eq6','eq7','eq8'];
   const anims=['eq1','eq2','eq3','eq4','eq5','eq6','eq7','eq8'];
@@ -1439,7 +1445,7 @@ function updatePlayerHeart(){
   const btn = document.getElementById('player-heart-btn');
   if(!btn || !currentPlayingItem) return;
   const saved = isInPlaylist(currentPlayingItem.id, currentPlayingTrackIdx);
-  btn.textContent = saved ? '♥' : '♡';
+  btn.textContent = saved ? '♥ Saved to Playlist' : '♡ Save to Playlist';
   btn.classList.toggle('saved', saved);
 }
 
