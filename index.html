@@ -1337,7 +1337,8 @@ function openAlbum(album){
 function playTrack(idx){
   if(!currentAlbum)return;
   document.querySelectorAll('.track-row').forEach(r=>r.classList.remove('playing'));
-  document.getElementById('track-'+idx).classList.add('playing');
+  const trackRow=document.getElementById('track-'+idx);
+  if(trackRow) trackRow.classList.add('playing');
   currentTrackIdx=idx;
   const a=document.getElementById('audio-el');
   a.src=currentAlbum.trackUrls[idx]; a.load(); a.play();
