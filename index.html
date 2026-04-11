@@ -251,6 +251,28 @@ audio{display:none;}
   .tab-row{gap:2px;}
   .tab-btn{padding:7px 12px;font-size:.76rem;}
 }
+
+/* ── NEON EQ VISUALIZER ── */
+.eq-box{width:100%;background:#000;border-radius:10px;padding:12px 14px 8px;box-sizing:border-box;border:1px solid rgba(255,0,255,.25);}
+.eq-container{display:flex;align-items:flex-end;gap:2px;height:56px;width:100%;}
+.eq-bar{flex:1;height:100%;border-radius:2px 2px 0 0;transform-origin:50% 100%;transform:scaleY(.06);will-change:transform;}
+.eq-bar:nth-child(1){background:linear-gradient(to top,#ff00ff,#cc00ff);}
+.eq-bar:nth-child(2){background:linear-gradient(to top,#cc00ff,#9900ff);}
+.eq-bar:nth-child(3){background:linear-gradient(to top,#9900ff,#6600ff);}
+.eq-bar:nth-child(4){background:linear-gradient(to top,#6600ff,#0099ff);}
+.eq-bar:nth-child(5){background:linear-gradient(to top,#0099ff,#00ccff);}
+.eq-bar:nth-child(6){background:linear-gradient(to top,#00ccff,#00ffcc);}
+.eq-bar:nth-child(7){background:linear-gradient(to top,#00ffcc,#00ff99);}
+.eq-bar:nth-child(8){background:linear-gradient(to top,#00ff99,#00ccff);}
+.eq-bar:nth-child(9){background:linear-gradient(to top,#00ccff,#0099ff);}
+.eq-bar:nth-child(10){background:linear-gradient(to top,#0099ff,#6600ff);}
+.eq-bar:nth-child(11){background:linear-gradient(to top,#6600ff,#cc00ff);}
+.eq-bar:nth-child(12){background:linear-gradient(to top,#cc00ff,#ff00ff);}
+.eq-bar:nth-child(13){background:linear-gradient(to top,#ff00ff,#ff0099);}
+.eq-bar:nth-child(14){background:linear-gradient(to top,#ff0099,#ff00ff);}
+.eq-bar:nth-child(15){background:linear-gradient(to top,#ff00ff,#cc00ff);}
+.eq-bar:nth-child(16){background:linear-gradient(to top,#cc00ff,#ff00ff);}
+@keyframes eq-bounce{0%{transform:scaleY(.06);}100%{transform:scaleY(1);}}
 </style>
 </head>
 <body>
@@ -1055,15 +1077,34 @@ function playPlaylistTrack(idx){
   if(!track) return;
   currentAlbum={id:-1,title:'My Playlist',emoji:'♡',color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',tracks:userPlaylist.map(p=>p.track_title),trackUrls:userPlaylist.map(p=>p.track_url)};
   currentTrackIdx=idx;
-  resetModal();
+
+  // Stop current audio cleanly without wiping src yet
+  const a=document.getElementById('audio-el');
+  a.pause();
+  setEQActive(false);
+
+  // Hide all modal views, show audio
+  ['pdf-view','video-view','album-view','upgrade-view'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
   document.getElementById('audio-view').style.display='flex';
-  setPlayerArt(null, '♡', currentAlbum.color);
+
+  // Set art and info
+  setPlayerArt(null, '♡', 'linear-gradient(135deg,#1A0A14,#2A0E1E)');
   document.getElementById('audio-player-title').textContent=track.track_title;
   document.getElementById('audio-player-author').textContent='My Playlist · Track '+(idx+1)+' of '+userPlaylist.length;
-  const a=document.getElementById('audio-el');
-  a.src=track.track_url; a.load(); a.play();
-  document.getElementById('play-pause-btn').textContent='⏸';
-  setEQActive(true);
+
+  // Play
+  a.src=track.track_url;
+  a.load();
+  a.play().then(()=>{
+    document.getElementById('play-pause-btn').textContent='⏸';
+    setEQActive(true);
+  }).catch(e=>console.error('Playlist play error:',e));
+
+  currentPlayingItem=currentAlbum;
+  currentPlayingTrackIdx=idx;
+  updatePlayerHeart();
   showTrackNav();
   showModal();
 }
@@ -1373,14 +1414,17 @@ function setPlayerArt(coverImg, emoji, color){
 
 function setEQActive(active){
   const bars = document.querySelectorAll('.eq-bar');
+  const durations = [.38,.52,.29,.61,.44,.33,.57,.41,.48,.36,.55,.42,.31,.59,.46,.37];
   bars.forEach((bar, i) => {
     if(active){
-      const durations = [.38,.52,.29,.61,.44,.33,.57,.41,.48,.36,.55,.42,.31,.59,.46,.37];
-      const heights = [40,75,90,55,85,45,95,60,70,35,80,50,65,88,42,72];
-      bar.style.animation = `eq-bounce ${durations[i%durations.length]}s ease-in-out infinite alternate`;
-      bar.style.height = heights[i%heights.length] + '%';
+      bar.style.animationName = 'eq-bounce';
+      bar.style.animationDuration = durations[i % durations.length] + 's';
+      bar.style.animationTimingFunction = 'ease-in-out';
+      bar.style.animationIterationCount = 'infinite';
+      bar.style.animationDirection = 'alternate';
+      bar.style.transform = '';
     } else {
-      bar.style.animation = 'none';
+      bar.style.animationName = 'none';
       bar.style.transform = 'scaleY(.05)';
     }
   });
