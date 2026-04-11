@@ -235,7 +235,8 @@ audio{display:none;}
 .playlist-row .pl-play{background:none;border:none;color:var(--gold);font-size:1.1rem;cursor:pointer;padding:4px 8px;}
 .playlist-row .pl-remove{background:none;border:none;color:var(--text-dim);font-size:.9rem;cursor:pointer;padding:4px 8px;transition:color .15s;}
 .playlist-row .pl-remove:hover{color:var(--red);}
-.btn-heart{background:none;border:none;font-size:1rem;cursor:pointer;padding:4px 6px;transition:transform .15s;color:var(--text-dim);}
+.btn-heart{background:none;border:1px solid var(--border);border-radius:6px;font-size:.75rem;cursor:pointer;padding:4px 10px;transition:all .15s;color:var(--text-dim);display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.btn-heart:hover{border-color:var(--red);color:var(--red);}
 .btn-heart:hover{transform:scale(1.2);}
 .btn-heart.saved{color:var(--red);}
 @media(max-width:640px){
@@ -385,6 +386,12 @@ audio{display:none;}
     <!-- Audio -->
     <div class="audio-player" id="audio-view" style="display:none">
       <div class="audio-art" id="audio-art">🎵</div>
+      <div class="eq-container" id="eq-bars">
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+        <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+      </div>
       <div class="audio-info">
         <div class="audio-title" id="audio-player-title">—</div>
         <div class="audio-author" id="audio-player-author">—</div>
@@ -403,7 +410,7 @@ audio{display:none;}
         <button class="ctrl-btn" id="next-track-btn" onclick="nextTrack()" title="Next track" style="display:none">⏩</button>
       </div>
       <div id="track-counter" style="display:none;font-size:.75rem;color:var(--text-dim);letter-spacing:.06em;text-align:center"></div>
-      <div class="vol-row">🔉<input type="range" min="0" max="1" step=".05" value="1" oninput="setVolume(this.value)"/>🔊</div>
+      <p style="font-size:.72rem;color:rgba(240,234,214,.4);letter-spacing:.06em;">Use device volume to adjust</p>
       <button class="btn-heart" id="player-heart-btn" onclick="togglePlayerHeart()" style="font-size:1.3rem;margin-top:4px;">♡</button>
       <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" onloadedmetadata="onMetaLoad()"></audio>
     </div>
@@ -1028,7 +1035,7 @@ function renderPlaylistTab(){
 function playPlaylistTrack(idx){
   const track=userPlaylist[idx];
   if(!track) return;
-  currentAlbum={title:'My Playlist',emoji:'♡',color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',tracks:userPlaylist.map(p=>p.track_title),trackUrls:userPlaylist.map(p=>p.track_url)};
+  currentAlbum={id:-1,title:'My Playlist',emoji:'♡',color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',tracks:userPlaylist.map(p=>p.track_title),trackUrls:userPlaylist.map(p=>p.track_url)};
   currentTrackIdx=idx;
   resetModal();
   document.getElementById('audio-view').style.display='flex';
@@ -1040,6 +1047,7 @@ function playPlaylistTrack(idx){
   a.src=track.track_url; a.load(); a.play();
   document.getElementById('play-pause-btn').textContent='⏸';
   document.getElementById('audio-art').classList.add('playing');
+  document.getElementById('eq-bars').classList.add('playing');
   showTrackNav();
   showModal();
 }
@@ -1147,7 +1155,7 @@ function renderStreamLibrary(filter){
         <div class="card-desc">${item.desc}</div>
         <div class="card-actions">
           ${isActive?`<button class="btn-stream" onclick="event.stopPropagation();openContent(${item.id})">${item.type==='ebook'?'📖 Read':item.type==='album'?'💿 View Tracks':'▶ Play'}</button>`:''}
-          ${isActive&&(item.type==='music'||item.type==='audiobook')?`<button class="btn-heart ${isInPlaylist(item.id,0)?'saved':''}" onclick="event.stopPropagation();togglePlaylistTrack(${item.id},0,'${item.title}',item.fileUrl||'',this)" title="Add to playlist">${isInPlaylist(item.id,0)?'♥':'♡'}</button>`:''}
+          ${isActive&&(item.type==='music'||item.type==='audiobook')?`<button class="btn-heart ${isInPlaylist(item.id,0)?'saved':''}" onclick="event.stopPropagation();togglePlaylistTrack(${item.id},0,'${item.title.replace(/'/g,"\\'")}','${item.fileUrl||""}',this)" title="Add to playlist">${isInPlaylist(item.id,0)?'♥':'♡'} Add</button>`:''}
           <button class="btn-buy" onclick="event.stopPropagation();buyItem(${item.id})">Buy ${item.price}</button>
         </div>
       </div>
@@ -1225,13 +1233,18 @@ function openContent(id){
   } else {
     document.getElementById('audio-view').style.display='flex';
     const art=document.getElementById('audio-art');
+    const artEmoji=document.getElementById('audio-art-emoji');
+    const audioBg=document.getElementById('audio-bg');
     if(item.coverImg){
-      art.innerHTML='<img src="'+item.coverImg+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+      artEmoji.innerHTML='<img src="'+item.coverImg+'" style="width:100%;height:100%;object-fit:cover;" />';
+      audioBg.style.backgroundImage='url('+item.coverImg+')';
     } else {
-      art.textContent=item.emoji;
+      artEmoji.textContent=item.emoji;
+      audioBg.style.backgroundImage='none';
+      audioBg.style.background=item.color;
     }
-    art.style.background=item.color;
     art.classList.remove('playing');
+    setEQActive(false);
     document.getElementById('audio-player-title').textContent=item.title;
     document.getElementById('audio-player-author').textContent=item.subtitle||item.author;
     const a=document.getElementById('audio-el');
@@ -1280,8 +1293,16 @@ function playTrack(idx){
   document.getElementById('audio-view').style.display='flex';
   document.getElementById('audio-player-title').textContent=currentAlbum.tracks[idx];
   document.getElementById('audio-player-author').textContent=currentAlbum.title+' · Track '+(idx+1);
-  document.getElementById('audio-art').textContent=currentAlbum.emoji;
-  document.getElementById('audio-art').style.background=currentAlbum.color;
+  const artEmojiA=document.getElementById('audio-art-emoji');
+  const audioBgA=document.getElementById('audio-bg');
+  if(currentAlbum.coverImg){
+    artEmojiA.innerHTML='<img src="'+currentAlbum.coverImg+'" style="width:100%;height:100%;object-fit:cover;" />';
+    audioBgA.style.backgroundImage='url('+currentAlbum.coverImg+')';
+  } else {
+    artEmojiA.textContent=currentAlbum.emoji;
+    audioBgA.style.backgroundImage='none';
+    audioBgA.style.background=currentAlbum.color;
+  }
   currentPlayingItem=currentAlbum; currentPlayingTrackIdx=idx; updatePlayerHeart();
   showTrackNav();
 }
@@ -1338,10 +1359,26 @@ function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-ove
 // PDF loaded via Google Drive iframe — no extra code needed
 
 // ── AUDIO ──
+function setEQActive(active){
+  const bars=['eq1','eq2','eq3','eq4','eq5','eq6','eq7','eq8'];
+  const anims=['eq1','eq2','eq3','eq4','eq5','eq6','eq7','eq8'];
+  bars.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(active){
+      el.classList.add('active');
+      el.style.animation=`${anims[i]} ${0.4+i*0.1}s ease-in-out infinite`;
+    } else {
+      el.classList.remove('active');
+      el.style.animation='none';
+    }
+  });
+}
+
 function togglePlay(){
-  const a=document.getElementById('audio-el'),btn=document.getElementById('play-pause-btn'),art=document.getElementById('audio-art');
-  if(a.paused){a.play();btn.textContent='⏸';art.classList.add('playing');}
-  else{a.pause();btn.textContent='▶';art.classList.remove('playing');}
+  const a=document.getElementById('audio-el'),btn=document.getElementById('play-pause-btn');
+  if(a.paused){a.play();btn.textContent='⏸';setEQActive(true);}
+  else{a.pause();btn.textContent='▶';setEQActive(false);}
 }
 
 function showTrackNav(){
@@ -1379,6 +1416,7 @@ function updateProgress(){
 }
 function onMetaLoad(){document.getElementById('time-total').textContent=fmt(document.getElementById('audio-el').duration);}
 function onAudioEnd(){
+  setEQActive(false);
   document.getElementById('play-pause-btn').textContent='▶';
   document.getElementById('audio-art').classList.remove('playing');
   // Auto-advance album tracks
