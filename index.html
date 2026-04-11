@@ -404,6 +404,7 @@ audio{display:none;}
       </div>
       <div id="track-counter" style="display:none;font-size:.75rem;color:var(--text-dim);letter-spacing:.06em;text-align:center"></div>
       <div class="vol-row">🔉<input type="range" min="0" max="1" step=".05" value="1" oninput="setVolume(this.value)"/>🔊</div>
+      <button class="btn-heart" id="player-heart-btn" onclick="togglePlayerHeart()" style="font-size:1.3rem;margin-top:4px;">♡</button>
       <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" onloadedmetadata="onMetaLoad()"></audio>
     </div>
     <!-- Video -->
@@ -1281,6 +1282,7 @@ function playTrack(idx){
   document.getElementById('audio-player-author').textContent=currentAlbum.title+' · Track '+(idx+1);
   document.getElementById('audio-art').textContent=currentAlbum.emoji;
   document.getElementById('audio-art').style.background=currentAlbum.color;
+  currentPlayingItem=currentAlbum; currentPlayingTrackIdx=idx; updatePlayerHeart();
   showTrackNav();
 }
 
@@ -1391,6 +1393,30 @@ function seekAudio(e){
   const r=document.getElementById('progress-bar').getBoundingClientRect();
   a.currentTime=((e.clientX-r.left)/r.width)*a.duration;
 }
+// Track currently playing in modal
+let currentPlayingItem = null;
+let currentPlayingTrackIdx = 0;
+
+function updatePlayerHeart(){
+  const btn = document.getElementById('player-heart-btn');
+  if(!btn || !currentPlayingItem) return;
+  const saved = isInPlaylist(currentPlayingItem.id, currentPlayingTrackIdx);
+  btn.textContent = saved ? '♥' : '♡';
+  btn.classList.toggle('saved', saved);
+}
+
+function togglePlayerHeart(){
+  if(!currentPlayingItem) return;
+  const btn = document.getElementById('player-heart-btn');
+  const title = currentPlayingItem.tracks
+    ? currentPlayingItem.tracks[currentPlayingTrackIdx]
+    : currentPlayingItem.title;
+  const url = currentPlayingItem.trackUrls
+    ? currentPlayingItem.trackUrls[currentPlayingTrackIdx]
+    : currentPlayingItem.fileUrl;
+  togglePlaylistTrack(currentPlayingItem.id, currentPlayingTrackIdx, title, url, btn);
+}
+
 function fmt(s){if(isNaN(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60);return`${m}:${sec.toString().padStart(2,'0')}`;}
 
 document.addEventListener('keydown',e=>{
