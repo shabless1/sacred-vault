@@ -227,6 +227,17 @@ audio{display:none;}
 .btn-sub-modal{padding:14px 36px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:10px;color:var(--black);font-family:var(--font-body);font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .2s;}
 .btn-sub-modal:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(201,168,76,.3);}
 
+.playlist-row{display:flex;align-items:center;gap:12px;padding:11px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:background .15s;}
+.playlist-row:hover{background:var(--card-hover);}
+.playlist-row .pl-num{width:24px;font-size:.76rem;color:var(--text-dim);text-align:center;flex-shrink:0;}
+.playlist-row .pl-title{flex:1;font-size:.88rem;color:var(--text);}
+.playlist-row .pl-sub{font-size:.72rem;color:var(--text-dim);}
+.playlist-row .pl-play{background:none;border:none;color:var(--gold);font-size:1.1rem;cursor:pointer;padding:4px 8px;}
+.playlist-row .pl-remove{background:none;border:none;color:var(--text-dim);font-size:.9rem;cursor:pointer;padding:4px 8px;transition:color .15s;}
+.playlist-row .pl-remove:hover{color:var(--red);}
+.btn-heart{background:none;border:none;font-size:1rem;cursor:pointer;padding:4px 6px;transition:transform .15s;color:var(--text-dim);}
+.btn-heart:hover{transform:scale(1.2);}
+.btn-heart.saved{color:var(--red);}
 @media(max-width:640px){
   .header{padding:12px 16px;}
   .library{padding:24px 14px 60px;}
@@ -301,6 +312,7 @@ audio{display:none;}
       <button class="tab-btn active" id="tab-stream" onclick="switchTab('stream')">✦ Stream Library</button>
       <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')">📺 Stella Maris TV</button>
       <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">🎬 Patreon Vault</button>
+      <button class="tab-btn" id="tab-playlist" onclick="switchTab('playlist')">♡ My Playlist</button>
     </div>
 
     <!-- Stream tab -->
@@ -337,6 +349,19 @@ audio{display:none;}
         🎬 These are full-length exclusive videos — complete uncut versions not available anywhere else.
       </div>
       <div class="grid" id="patreon-grid"></div>
+    </div>
+
+    <!-- Playlist tab -->
+    <div id="tab-playlist-content" style="display:none">
+      <div id="playlist-empty" style="text-align:center;padding:60px 20px;color:var(--text-dim);display:none">
+        <div style="font-size:2.5rem;margin-bottom:14px;">♡</div>
+        <p style="font-size:.9rem;line-height:1.7;">Your playlist is empty.<br/>Tap ♡ on any track to add it here.</p>
+      </div>
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+        <p id="playlist-count" style="font-size:.84rem;color:var(--text-dim);"></p>
+        <button id="play-playlist-btn" onclick="playFullPlaylist()" style="display:none;padding:8px 18px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:8px;color:var(--black);font-family:var(--font-body);font-size:.82rem;font-weight:700;cursor:pointer;letter-spacing:.04em;">▶ Play All</button>
+      </div>
+      <div id="playlist-grid" style="display:flex;flex-direction:column;gap:6px;"></div>
     </div>
 
     <!-- Videos tab -->
@@ -860,6 +885,7 @@ function buyItem(id){
 
 // ── State ──
 let user=null;
+let userPlaylist=[];
 let currentAlbum=null, currentTrackIdx=0;
 
 // ── LOGIN ──
@@ -933,6 +959,99 @@ async function startLogin(){
   }
 }
 
+// ── PLAYLIST ──
+async function loadPlaylist(){
+  if(!user) return;
+  try{
+    const res=await fetch('/.netlify/functions/playlist-get',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:user.email})
+    });
+    const data=await res.json();
+    userPlaylist=data.playlist||[];
+  }catch(e){ console.error('Playlist load error',e); }
+}
+
+function isInPlaylist(contentId, trackIndex){
+  return userPlaylist.some(p=>p.content_id===contentId && p.track_index===trackIndex);
+}
+
+async function togglePlaylistTrack(contentId, trackIndex, trackTitle, trackUrl, btnEl){
+  if(!user) return;
+  const inList=isInPlaylist(contentId, trackIndex);
+  const action=inList?'remove':'add';
+  try{
+    await fetch('/.netlify/functions/playlist-add',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:user.email,action,content_id:contentId,track_index:trackIndex,track_title:trackTitle,track_url:trackUrl})
+    });
+    if(action==='add'){
+      userPlaylist.push({content_id:contentId,track_index:trackIndex,track_title:trackTitle,track_url:trackUrl});
+      if(btnEl){btnEl.textContent='♥';btnEl.classList.add('saved');}
+    } else {
+      userPlaylist=userPlaylist.filter(p=>!(p.content_id===contentId&&p.track_index===trackIndex));
+      if(btnEl){btnEl.textContent='♡';btnEl.classList.remove('saved');}
+    }
+  }catch(e){ console.error('Playlist toggle error',e); }
+}
+
+function renderPlaylistTab(){
+  const grid=document.getElementById('playlist-grid');
+  const empty=document.getElementById('playlist-empty');
+  const count=document.getElementById('playlist-count');
+  const playBtn=document.getElementById('play-playlist-btn');
+
+  if(!userPlaylist.length){
+    empty.style.display='block';
+    grid.innerHTML='';
+    count.textContent='';
+    playBtn.style.display='none';
+    return;
+  }
+
+  empty.style.display='none';
+  playBtn.style.display='block';
+  count.textContent=userPlaylist.length+' track'+(userPlaylist.length===1?'':'s')+' saved';
+
+  grid.innerHTML=userPlaylist.map((p,i)=>`
+    <div class="playlist-row">
+      <div class="pl-num">${i+1}</div>
+      <div style="flex:1">
+        <div class="pl-title">${p.track_title||'Unknown Track'}</div>
+      </div>
+      <button class="pl-play" onclick="playPlaylistTrack(${i})" title="Play">▶</button>
+      <button class="pl-remove" onclick="removeFromPlaylist(${i})" title="Remove">✕</button>
+    </div>`).join('');
+}
+
+function playPlaylistTrack(idx){
+  const track=userPlaylist[idx];
+  if(!track) return;
+  currentAlbum={title:'My Playlist',emoji:'♡',color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',tracks:userPlaylist.map(p=>p.track_title),trackUrls:userPlaylist.map(p=>p.track_url)};
+  currentTrackIdx=idx;
+  resetModal();
+  document.getElementById('audio-view').style.display='flex';
+  document.getElementById('audio-art').textContent='♡';
+  document.getElementById('audio-art').style.background=currentAlbum.color;
+  document.getElementById('audio-player-title').textContent=track.track_title;
+  document.getElementById('audio-player-author').textContent='My Playlist · Track '+(idx+1)+' of '+userPlaylist.length;
+  const a=document.getElementById('audio-el');
+  a.src=track.track_url; a.load(); a.play();
+  document.getElementById('play-pause-btn').textContent='⏸';
+  document.getElementById('audio-art').classList.add('playing');
+  showTrackNav();
+  showModal();
+}
+
+function playFullPlaylist(){ if(userPlaylist.length) playPlaylistTrack(0); }
+
+async function removeFromPlaylist(idx){
+  const track=userPlaylist[idx];
+  if(!track) return;
+  await togglePlaylistTrack(track.content_id,track.track_index,track.track_title,track.track_url,null);
+  renderPlaylistTab();
+}
+
 function doLogout(){
   localStorage.removeItem(SESSION_KEY);
   user=null;
@@ -979,6 +1098,7 @@ function startSession(){
     renderStreamLibrary('all');
     renderVideos();
     renderPatreonVideos();
+    loadPlaylist();
   },400);
 }
 
@@ -991,12 +1111,11 @@ function goSubscribe(){
 
 // ── TABS ──
 function switchTab(tab){
-  document.getElementById('tab-stream').classList.toggle('active',tab==='stream');
-  document.getElementById('tab-videos').classList.toggle('active',tab==='videos');
-  document.getElementById('tab-patreon').classList.toggle('active',tab==='patreon');
-  document.getElementById('tab-stream-content').style.display=tab==='stream'?'block':'none';
-  document.getElementById('tab-videos-content').style.display=tab==='videos'?'block':'none';
-  document.getElementById('tab-patreon-content').style.display=tab==='patreon'?'block':'none';
+  ['stream','videos','patreon','playlist'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',tab===t);
+    document.getElementById('tab-'+t+'-content').style.display=tab===t?'block':'none';
+  });
+  if(tab==='playlist') renderPlaylistTab();
 }
 
 // ── RENDER STREAM LIBRARY ──
@@ -1027,6 +1146,7 @@ function renderStreamLibrary(filter){
         <div class="card-desc">${item.desc}</div>
         <div class="card-actions">
           ${isActive?`<button class="btn-stream" onclick="event.stopPropagation();openContent(${item.id})">${item.type==='ebook'?'📖 Read':item.type==='album'?'💿 View Tracks':'▶ Play'}</button>`:''}
+          ${isActive&&(item.type==='music'||item.type==='audiobook')?`<button class="btn-heart ${isInPlaylist(item.id,0)?'saved':''}" onclick="event.stopPropagation();togglePlaylistTrack(${item.id},0,'${item.title}',item.fileUrl||'',this)" title="Add to playlist">${isInPlaylist(item.id,0)?'♥':'♡'}</button>`:''}
           <button class="btn-buy" onclick="event.stopPropagation();buyItem(${item.id})">Buy ${item.price}</button>
         </div>
       </div>
