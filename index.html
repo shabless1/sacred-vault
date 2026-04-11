@@ -170,8 +170,8 @@ body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-h
 /* ── AUDIO PLAYER ── */
 .audio-player{padding:36px 28px;display:flex;flex-direction:column;align-items:center;gap:22px;}
 .audio-art{width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:4.2rem;border:2px solid var(--border-bright);flex-shrink:0;}
-.audio-art.playing{animation:spin-art 12s linear infinite;box-shadow:0 0 40px rgba(201,168,76,.22);}
-@keyframes spin-art{to{transform:rotate(360deg);}}
+.audio-art.playing{box-shadow:0 0 40px rgba(201,168,76,.22);}
+
 .audio-info{text-align:center;}
 .audio-title{font-family:var(--font-head);font-size:1.65rem;font-weight:400;color:var(--text);}
 .audio-author{font-size:.8rem;color:var(--text-dim);margin-top:4px;}
@@ -385,7 +385,7 @@ audio{display:none;}
     </div>
     <!-- Audio -->
     <div class="audio-player" id="audio-view" style="display:none;position:relative;overflow:hidden;">
-      <div id="audio-bg" style="position:absolute;inset:0;background-image:url(https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697);background-size:cover;background-position:center;filter:blur(28px);opacity:.4;z-index:0;transform:scale(1.15);"></div>
+      <div id="audio-bg" style="position:absolute;inset:0;background-image:url(https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697);background-size:cover;background-position:center;filter:blur(20px);opacity:.25;z-index:0;transform:scale(1.15);"></div>
       <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;">
         <div class="audio-art" id="audio-art">
           <img id="audio-art-img" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"/>
@@ -1050,8 +1050,7 @@ function playPlaylistTrack(idx){
   const a=document.getElementById('audio-el');
   a.src=track.track_url; a.load(); a.play();
   document.getElementById('play-pause-btn').textContent='⏸';
-  document.getElementById('audio-art').classList.add('playing');
-  document.getElementById('eq-bars').classList.add('playing');
+  setEQActive(true);
   showTrackNav();
   showModal();
 }
@@ -1237,7 +1236,6 @@ function openContent(id){
   } else {
     document.getElementById('audio-view').style.display='flex';
     setPlayerArt(item.coverImg, item.emoji, item.color);
-    document.getElementById('audio-art').classList.remove('playing');
     setEQActive(false);
     document.getElementById('audio-player-title').textContent=item.title;
     document.getElementById('audio-player-author').textContent=item.subtitle||item.author;
@@ -1264,6 +1262,15 @@ function openAlbum(album){
   document.getElementById('album-modal-title').textContent=album.title;
   document.getElementById('album-modal-meta').textContent=`${album.author} · ${album.tracks.length} tracks`;
   currentAlbum=album; currentTrackIdx=-1;
+  // Add Play All button
+  const existingPlayAll = document.getElementById('album-play-all-btn');
+  if(existingPlayAll) existingPlayAll.remove();
+  const playAllBtn = document.createElement('button');
+  playAllBtn.id = 'album-play-all-btn';
+  playAllBtn.textContent = '▶ Play All';
+  playAllBtn.style.cssText = 'margin:10px 0 4px;padding:8px 22px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:8px;color:var(--black);font-family:var(--font-body);font-size:.85rem;font-weight:700;cursor:pointer;letter-spacing:.04em;';
+  playAllBtn.onclick = ()=>playTrack(0);
+  document.getElementById('album-modal-meta').after(playAllBtn);
   document.getElementById('track-list').innerHTML=album.tracks.map((t,i)=>`
     <div class="track-row" id="track-${i}" onclick="playTrack(${i})">
       <div class="track-num">${i+1}</div>
@@ -1281,22 +1288,12 @@ function playTrack(idx){
   const a=document.getElementById('audio-el');
   a.src=currentAlbum.trackUrls[idx]; a.load(); a.play();
   document.getElementById('play-pause-btn').textContent='⏸';
-  document.getElementById('audio-art').classList.add('playing');
   // Show audio player inline by switching views
   document.getElementById('album-view').style.display='none';
   document.getElementById('audio-view').style.display='flex';
   document.getElementById('audio-player-title').textContent=currentAlbum.tracks[idx];
   document.getElementById('audio-player-author').textContent=currentAlbum.title+' · Track '+(idx+1);
-  const artEmojiA=document.getElementById('audio-art-emoji');
-  const audioBgA=document.getElementById('audio-bg');
-  if(currentAlbum.coverImg){
-    artEmojiA.innerHTML='<img src="'+currentAlbum.coverImg+'" style="width:100%;height:100%;object-fit:cover;" />';
-    audioBgA.style.backgroundImage='url('+currentAlbum.coverImg+')';
-  } else {
-    artEmojiA.textContent=currentAlbum.emoji;
-    audioBgA.style.backgroundImage='none';
-    audioBgA.style.background=currentAlbum.color;
-  }
+  setPlayerArt(currentAlbum.coverImg, currentAlbum.emoji, currentAlbum.color);
   currentPlayingItem=currentAlbum; currentPlayingTrackIdx=idx; updatePlayerHeart();
   showTrackNav();
 }
@@ -1355,14 +1352,10 @@ function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-ove
 // ── AUDIO ──
 function setPlayerArt(coverImg, emoji, color){
   const img = document.getElementById('audio-art-img');
-  const emojiEl = document.getElementById('audio-art-emoji');
   const bg = document.getElementById('audio-bg');
   const cover = coverImg || DEFAULT_COVER;
-  img.src = cover;
-  img.style.display = 'block';
-  emojiEl.style.display = 'none';
-  bg.style.backgroundImage = 'url(' + cover + ')';
-  document.getElementById('audio-art').style.background = color || 'transparent';
+  if(img){ img.src = cover; }
+  if(bg){ bg.style.backgroundImage = 'url(' + cover + ')'; }
 }
 
 function setEQActive(active){
