@@ -1354,6 +1354,9 @@ function openContent(id){
     a.src=item.fileUrl; a.load();
     document.getElementById('play-pause-btn').textContent='▶';
     document.getElementById('progress-fill').style.width='0%';
+    currentPlayingItem=item;
+    currentPlayingTrackIdx=0;
+    updatePlayerHeart();
   }
   showModal();
 }
