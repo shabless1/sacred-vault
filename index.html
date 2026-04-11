@@ -406,6 +406,18 @@ audio{display:none;}
 </div>
 
 <!-- ══ MODAL ══ -->
+<div id="mini-player" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:rgba(13,13,18,.97);backdrop-filter:blur(16px);border-top:1px solid rgba(201,168,76,.2);padding:10px 16px;align-items:center;gap:12px;">
+  <img id="mini-art" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:40px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0;"/>
+  <div style="flex:1;min-width:0;">
+    <div id="mini-title" style="font-size:.82rem;color:#F0EAD6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+    <div id="mini-author" style="font-size:.7rem;color:#9A9080;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">—</div>
+  </div>
+  <button onclick="miniPrevTrack()" id="mini-prev" style="background:none;border:none;color:#9A9080;font-size:1.1rem;cursor:pointer;padding:4px;display:none;">⏮</button>
+  <button onclick="miniTogglePlay()" id="mini-play" style="background:none;border:none;color:#E8C97A;font-size:1.5rem;cursor:pointer;padding:4px;">▶</button>
+  <button onclick="miniNextTrack()" id="mini-next" style="background:none;border:none;color:#9A9080;font-size:1.1rem;cursor:pointer;padding:4px;display:none;">⏭</button>
+  <button onclick="restorePlayer()" style="background:none;border:1px solid rgba(201,168,76,.3);border-radius:6px;color:#9A9080;font-size:.78rem;cursor:pointer;padding:4px 10px;">▲ Open</button>
+  <button onclick="closeMiniPlayer()" style="background:none;border:none;color:#9A9080;font-size:1.1rem;cursor:pointer;padding:4px;">✕</button>
+</div>
 <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
@@ -1424,7 +1436,8 @@ function openUpgrade(){
 }
 
 function showModal(){
-  document.getElementById('mini-player').style.display = 'none';
+  const mp = document.getElementById('mini-player');
+  if(mp) mp.style.display = 'none';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
