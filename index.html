@@ -1036,6 +1036,14 @@ function isInPlaylist(contentId, trackIndex){
   return userPlaylist.some(p=>p.content_id===contentId && p.track_index===trackIndex);
 }
 
+function addSingleToPlaylist(itemId, btnEl){
+  const item = CONTENT.find(c => c.id === itemId);
+  if(!item) { console.log('Item not found:', itemId); return; }
+  const url = item.fileUrl || item.trackUrls?.[0] || '';
+  console.log('addSingleToPlaylist:', item.title, url);
+  togglePlaylistTrack(itemId, 0, item.title, url, btnEl);
+}
+
 async function togglePlaylistTrack(contentId, trackIndex, trackTitle, trackUrl, btnEl){
   if(!user) return;
   console.log('togglePlaylistTrack called:', {contentId, trackIndex, trackTitle, trackUrl});
@@ -1249,7 +1257,7 @@ function renderStreamLibrary(filter){
         <div class="card-desc">${item.desc}</div>
         <div class="card-actions">
           ${isActive?`<button class="btn-stream" onclick="event.stopPropagation();openContent(${item.id})">${item.type==='ebook'?'📖 Read':item.type==='album'?'💿 View Tracks':'▶ Play'}</button>`:''}
-          ${isActive&&(item.type==='music'||item.type==='audiobook')?`<button class="btn-heart ${isInPlaylist(item.id,0)?'saved':''}" onclick="event.stopPropagation();togglePlaylistTrack(${item.id},0,'${item.title.replace(/'/g,"\\'")}','${item.fileUrl||""}',this)" title="Add to playlist">${isInPlaylist(item.id,0)?'♥':'♡'} Add</button>`:''}
+          ${isActive&&(item.type==='music'||item.type==='audiobook')?`<button class="btn-heart ${isInPlaylist(item.id,0)?'saved':''}" data-item-id="${item.id}" onclick="event.stopPropagation();addSingleToPlaylist(${item.id},this)" title="Add to playlist">${isInPlaylist(item.id,0)?'♥':'♡'} Add</button>`:''}
           <button class="btn-buy" onclick="event.stopPropagation();buyItem(${item.id})">Buy ${item.price}</button>
         </div>
       </div>
@@ -1416,6 +1424,7 @@ function openUpgrade(){
 }
 
 function showModal(){
+  document.getElementById('mini-player').style.display = 'none';
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -1442,11 +1451,63 @@ function closeModal(){
 }
 
 function toggleMinimize(){
-  const overlay = document.getElementById('modal-overlay');
-  const btn = document.getElementById('minimize-btn');
-  const isMin = overlay.classList.toggle('minimized');
-  btn.textContent = isMin ? '▲' : '▼';
-  btn.title = isMin ? 'Restore player' : 'Minimize player';
+  // Close the modal overlay and show mini player
+  const miniPlayer = document.getElementById('mini-player');
+  const artImg = document.getElementById('audio-art-img');
+  const title = document.getElementById('audio-player-title').textContent;
+  const author = document.getElementById('audio-player-author').textContent;
+  const audioEl = document.getElementById('audio-el');
+
+  document.getElementById('mini-title').textContent = title;
+  document.getElementById('mini-author').textContent = author;
+  document.getElementById('mini-art').src = artImg ? artImg.src : DEFAULT_COVER;
+  document.getElementById('mini-play').textContent = audioEl.paused ? '▶' : '⏸';
+
+  // Show/hide prev next in mini based on album
+  const hasPrev = currentAlbum && currentTrackIdx > 0;
+  const hasNext = currentAlbum && currentTrackIdx < (currentAlbum.tracks?.length||1)-1;
+  document.getElementById('mini-prev').style.display = hasPrev ? 'block' : 'none';
+  document.getElementById('mini-next').style.display = hasNext ? 'block' : 'none';
+
+  miniPlayer.style.display = 'flex';
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function restorePlayer(){
+  document.getElementById('mini-player').style.display = 'none';
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMiniPlayer(){
+  document.getElementById('mini-player').style.display = 'none';
+  const a = document.getElementById('audio-el');
+  a.pause(); a.src = '';
+  setEQActive(false);
+}
+
+function miniTogglePlay(){
+  const a = document.getElementById('audio-el');
+  const btn = document.getElementById('mini-play');
+  if(a.paused){ a.play(); btn.textContent='⏸'; setEQActive(true); }
+  else { a.pause(); btn.textContent='▶'; setEQActive(false); }
+}
+
+function miniPrevTrack(){ prevTrack(); syncMiniPlayer(); }
+function miniNextTrack(){ nextTrack(); syncMiniPlayer(); }
+
+function syncMiniPlayer(){
+  const mini = document.getElementById('mini-player');
+  if(mini.style.display === 'none') return;
+  const title = document.getElementById('audio-player-title').textContent;
+  const author = document.getElementById('audio-player-author').textContent;
+  document.getElementById('mini-title').textContent = title;
+  document.getElementById('mini-author').textContent = author;
+  const hasPrev = currentAlbum && currentTrackIdx > 0;
+  const hasNext = currentAlbum && currentTrackIdx < (currentAlbum.tracks?.length||1)-1;
+  document.getElementById('mini-prev').style.display = hasPrev ? 'block' : 'none';
+  document.getElementById('mini-next').style.display = hasNext ? 'block' : 'none';
 }
 function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
 
