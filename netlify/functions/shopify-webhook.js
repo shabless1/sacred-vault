@@ -5,10 +5,9 @@ exports.handler = async (event) => {
 
   try {
     const payload = JSON.parse(event.body);
-
-    // Shopify Flow sends customer email, name, and order info
-    const email = (payload.email || payload.customer_email || '').toLowerCase().trim();
-    const name = payload.firstName || payload.first_name || payload.customer_first_name || 'Beloved';
+    const email = (payload.email || '').toLowerCase().trim();
+    const name = payload.firstName || payload.first_name || 'Beloved';
+    const status = payload.status === 'cancelled' ? 'cancelled' : 'active';
 
     if (!email) {
       console.log('No email in payload:', JSON.stringify(payload));
@@ -18,7 +17,6 @@ exports.handler = async (event) => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
-    // Add subscriber to Supabase
     const res = await fetch(`${supabaseUrl}/rest/v1/subscribers`, {
       method: 'POST',
       headers: {
@@ -30,16 +28,16 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         email,
         name,
-        status: 'active',
+        status,
         updated_at: new Date().toISOString()
       })
     });
 
-    console.log('Supabase response:', res.status, 'for email:', email);
+    console.log(`Subscriber ${email} set to ${status}. Supabase: ${res.status}`);
     return { statusCode: 200, body: 'OK' };
 
   } catch (err) {
-    console.error('Shopify webhook error:', err.message);
+    console.error('Webhook error:', err.message);
     return { statusCode: 500, body: 'Server error' };
   }
 };
