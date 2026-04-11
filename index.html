@@ -385,36 +385,49 @@ audio{display:none;}
     </div>
     <!-- Audio -->
     <div class="audio-player" id="audio-view" style="display:none;position:relative;overflow:hidden;">
-      <div id="audio-bg" style="position:absolute;inset:0;background-image:url(https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697);background-size:cover;background-position:center;filter:blur(20px);opacity:.25;z-index:0;transform:scale(1.15);"></div>
-      <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;">
+      <!-- Full clear background image -->
+      <div id="audio-bg" style="position:absolute;inset:0;background-image:url(https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697);background-size:cover;background-position:center;opacity:.55;z-index:0;"></div>
+      <!-- Dark overlay so text is readable -->
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,16,.5) 0%,rgba(10,10,16,.85) 60%,rgba(10,10,16,.97) 100%);z-index:1;"></div>
+      <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;">
+        <!-- Cover art -->
         <div class="audio-art" id="audio-art">
           <img id="audio-art-img" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"/>
         </div>
-        <div class="eq-container" id="eq-bars">
-          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-          <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-        </div>
+        <!-- Track info -->
         <div class="audio-info">
           <div class="audio-title" id="audio-player-title">—</div>
           <div class="audio-author" id="audio-player-author">—</div>
         </div>
+        <!-- Neon EQ Visualizer -->
+        <div class="eq-box">
+          <div class="eq-container" id="eq-bars">
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+          </div>
+        </div>
+        <!-- Progress -->
         <div class="progress-wrap">
           <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
             <div class="progress-fill" id="progress-fill" style="width:0%"></div>
           </div>
           <div class="time-row"><span id="time-current">0:00</span><span id="time-total">0:00</span></div>
         </div>
+        <!-- Controls -->
         <div class="controls">
-          <button class="ctrl-btn" id="prev-track-btn" onclick="prevTrack()" title="Previous track" style="display:none">⏪</button>
-          <button class="ctrl-btn" onclick="skipAudio(-15)" title="Back 15s">⏮</button>
+          <button class="ctrl-btn" id="prev-track-btn" onclick="prevTrack()" style="display:none">⏪</button>
+          <button class="ctrl-btn" onclick="skipAudio(-15)">⏮</button>
           <button class="ctrl-btn play-pause" id="play-pause-btn" onclick="togglePlay()">▶</button>
-          <button class="ctrl-btn" onclick="skipAudio(15)" title="Forward 15s">⏭</button>
-          <button class="ctrl-btn" id="next-track-btn" onclick="nextTrack()" title="Next track" style="display:none">⏩</button>
+          <button class="ctrl-btn" onclick="skipAudio(15)">⏭</button>
+          <button class="ctrl-btn" id="next-track-btn" onclick="nextTrack()" style="display:none">⏩</button>
         </div>
         <div id="track-counter" style="display:none;font-size:.75rem;color:var(--text-dim);letter-spacing:.06em;text-align:center"></div>
-        <button class="btn-heart" id="player-heart-btn" onclick="togglePlayerHeart()" style="font-size:.85rem;padding:7px 18px;border:1px solid var(--border);border-radius:20px;background:rgba(0,0,0,.4);color:var(--text);cursor:pointer;letter-spacing:.04em;">♡ Save to Playlist</button>
+        <!-- Save to playlist -->
+        <button id="player-heart-btn" onclick="togglePlayerHeart()" style="font-size:.82rem;padding:7px 20px;border:1px solid rgba(255,0,255,.4);border-radius:20px;background:rgba(0,0,0,.5);color:#ff00ff;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;">♡ Save to Playlist</button>
         <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" onloadedmetadata="onMetaLoad()"></audio>
       </div>
     </div>
@@ -1359,17 +1372,16 @@ function setPlayerArt(coverImg, emoji, color){
 }
 
 function setEQActive(active){
-  const bars=['eq1','eq2','eq3','eq4','eq5','eq6','eq7','eq8'];
-  const anims=['eq1','eq2','eq3','eq4','eq5','eq6','eq7','eq8'];
-  bars.forEach((id,i)=>{
-    const el=document.getElementById(id);
-    if(!el) return;
+  const bars = document.querySelectorAll('.eq-bar');
+  bars.forEach((bar, i) => {
     if(active){
-      el.classList.add('active');
-      el.style.animation=`${anims[i]} ${0.4+i*0.1}s ease-in-out infinite`;
+      const durations = [.38,.52,.29,.61,.44,.33,.57,.41,.48,.36,.55,.42,.31,.59,.46,.37];
+      const heights = [40,75,90,55,85,45,95,60,70,35,80,50,65,88,42,72];
+      bar.style.animation = `eq-bounce ${durations[i%durations.length]}s ease-in-out infinite alternate`;
+      bar.style.height = heights[i%heights.length] + '%';
     } else {
-      el.classList.remove('active');
-      el.style.animation='none';
+      bar.style.animation = 'none';
+      bar.style.transform = 'scaleY(.05)';
     }
   });
 }
@@ -1439,7 +1451,9 @@ function updatePlayerHeart(){
   if(!btn || !currentPlayingItem) return;
   const saved = isInPlaylist(currentPlayingItem.id, currentPlayingTrackIdx);
   btn.textContent = saved ? '♥ Saved to Playlist' : '♡ Save to Playlist';
-  btn.classList.toggle('saved', saved);
+  btn.style.borderColor = saved ? 'rgba(255,0,255,.8)' : 'rgba(255,0,255,.4)';
+  btn.style.color = saved ? '#ff00ff' : '#ff00ff';
+  btn.style.background = saved ? 'rgba(255,0,255,.15)' : 'rgba(0,0,0,.5)';
 }
 
 function togglePlayerHeart(){
