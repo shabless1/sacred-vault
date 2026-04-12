@@ -1143,7 +1143,10 @@ function playPlaylistTrack(idx){
   document.getElementById('audio-view').style.display='flex';
 
   // Set art and info
-  setPlayerArt(null, '♡', 'linear-gradient(135deg,#1A0A14,#2A0E1E)');
+  // Look up cover art for this track
+  const trackContent = CONTENT.find(c => c.id === track.content_id);
+  const trackCover = trackContent?.coverImg || null;
+  setPlayerArt(trackCover, '♡', trackContent?.color || 'linear-gradient(135deg,#1A0A14,#2A0E1E)');
   document.getElementById('audio-player-title').textContent=track.track_title;
   document.getElementById('audio-player-author').textContent='My Playlist · Track '+(idx+1)+' of '+userPlaylist.length;
 
