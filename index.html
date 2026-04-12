@@ -314,8 +314,9 @@ audio{display:none;}
       <div class="login-error" id="login-error"></div>
       <p class="login-help">
         Enter your email to access your library.<br/>
-        If you're a subscriber your membership will be verified instantly.<br/><br/>
-        Not a member yet? <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank">Subscribe here →</a><br/>
+        Subscribers are verified instantly.<br/><br/>
+        <a href="#" onclick="startTrial()" style="color:var(--gold);font-weight:600;">✦ Start your 7-day free trial →</a><br/><br/>
+        Already a member? Just enter your email above.<br/>
         Need help? <a href="mailto:support@sacredtea.net">Contact support →</a>
       </p>
     </div>
@@ -1237,62 +1238,67 @@ function doLogout(){
 }
 
 window.addEventListener('load', async ()=>{
-  // Check for trial code in URL first
-  const params = new URLSearchParams(window.location.search);
-  const trialCode = params.get('trial');
-  if(trialCode){
-    await handleTrialCode(trialCode);
-    return;
-  }
   loadSession();
 });
 
-async function handleTrialCode(code){
-  // Show loading
+async function startTrial(){
+  const email = document.getElementById('login-email').value.trim();
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  err.style.display='none';
+
+  if(!email){
+    err.style.display='block';
+    err.textContent='Please enter your email address first, then click Start your free trial.';
+    document.getElementById('login-email').focus();
+    return;
+  }
+
+  btn.textContent='Starting trial…';
+  btn.disabled=true;
   document.getElementById('step-loading').style.display='block';
   document.getElementById('step-email').style.display='none';
 
-  try {
-    const res = await fetch('${WORKER_URL}/trial-validate', {
+  try{
+    const res = await fetch('https://sacred-vault-api.shabless1.workers.dev/trial-start', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({code})
+      body:JSON.stringify({email})
     });
     const data = await res.json();
 
     if(data.access){
-      // Save trial session
       localStorage.setItem(SESSION_KEY, JSON.stringify({
-        email: 'trial-' + code,
-        name: 'Beloved',
-        trial: true,
-        trial_code: code,
-        expires_at: data.expires_at,
-        days_remaining: data.days_remaining,
+        email: data.email,
+        name: data.name || 'Beloved',
+        trial: data.trial || false,
+        subscriber: data.subscriber || false,
+        expires_at: data.expires_at || null,
+        days_remaining: data.days_remaining || null,
         ts: Date.now()
       }));
-      user = { email: 'trial-' + code, name: 'Beloved', status: 'active', trial: true };
-      // Show trial banner
-      showTrialBanner(data.days_remaining);
-      // Clean URL
-      window.history.replaceState({}, '', window.location.pathname);
+      user = { email: data.email, name: data.name || 'Beloved', status:'active', trial: data.trial };
+      if(data.trial) showTrialBanner(data.days_remaining);
       startSession();
     } else {
       document.getElementById('step-loading').style.display='none';
       document.getElementById('step-email').style.display='block';
-      const err = document.getElementById('login-error');
+      btn.textContent='✦ Enter the Vault ✦';
+      btn.disabled=false;
       err.style.display='block';
       if(data.reason === 'trial_expired'){
         err.innerHTML='Your 7-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
       } else {
-        err.textContent='Invalid trial link. Please check your link and try again.';
+        err.textContent='Something went wrong. Please try again.';
       }
     }
   } catch(e){
     document.getElementById('step-loading').style.display='none';
     document.getElementById('step-email').style.display='block';
-    document.getElementById('login-error').style.display='block';
-    document.getElementById('login-error').textContent='Network error. Please try again.';
+    btn.textContent='✦ Enter the Vault ✦';
+    btn.disabled=false;
+    err.style.display='block';
+    err.textContent='Network error. Please try again.';
   }
 }
 
