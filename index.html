@@ -1325,10 +1325,17 @@ function startSession(){
     const badge=document.getElementById('sub-badge');
     if(user.status==='active'){
       badge.className='sub-badge active';
-      document.getElementById('sub-badge-text').textContent='All Access — Active';
-      document.getElementById('renewal-bar').style.display='flex';
-      document.getElementById('renewal-date').textContent=user.renewalDate;
-      document.getElementById('greeting-sub').textContent='Your full vault is open. Stream everything. Buy what you love to keep. 🖤';
+      if(user.trial){
+        // Trial user — hide renewal bar, show trial banner instead
+        document.getElementById('sub-badge-text').textContent='Free Trial — Active';
+        document.getElementById('renewal-bar').style.display='none';
+        document.getElementById('greeting-sub').textContent='Welcome to the Sacred Vault. Enjoy your 7-day free trial. 🖤';
+      } else {
+        document.getElementById('sub-badge-text').textContent='All Access — Active';
+        document.getElementById('renewal-bar').style.display='flex';
+        document.getElementById('renewal-date').textContent=user.renewalDate;
+        document.getElementById('greeting-sub').textContent='Your full vault is open. Stream everything. Buy what you love to keep. 🖤';
+      }
       document.getElementById('upgrade-prompt').style.display='none';
     } else {
       badge.className='sub-badge cancelled';
