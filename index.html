@@ -1004,7 +1004,7 @@ async function startLogin(){
   document.getElementById('step-email').style.display='none';
 
   try{
-    const res=await fetch('/.netlify/functions/check-access',{
+    const res=await fetch('https://sacred-vault-api.shabless1.workers.dev/check-access',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email})
@@ -1045,7 +1045,7 @@ async function startLogin(){
 async function loadPlaylist(){
   if(!user) return;
   try{
-    const res=await fetch('/.netlify/functions/playlist-get',{
+    const res=await fetch('https://sacred-vault-api.shabless1.workers.dev/playlist-get',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email:user.email})
     });
@@ -1072,7 +1072,7 @@ async function togglePlaylistTrack(contentId, trackIndex, trackTitle, trackUrl, 
   const inList=isInPlaylist(contentId, trackIndex);
   const action=inList?'remove':'add';
   try{
-    await fetch('/.netlify/functions/playlist-add',{
+    await fetch('https://sacred-vault-api.shabless1.workers.dev/playlist-add',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email:user.email,action,content_id:contentId,track_index:trackIndex,track_title:trackTitle,track_url:trackUrl})
     });
@@ -1173,7 +1173,7 @@ async function clearPlaylist(){
   if(!confirm('Remove all tracks from your playlist?')) return;
   // Remove each track from Supabase
   for(const track of userPlaylist){
-    await fetch('/.netlify/functions/playlist-add',{
+    await fetch('https://sacred-vault-api.shabless1.workers.dev/playlist-add',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
