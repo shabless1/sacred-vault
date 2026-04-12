@@ -170,6 +170,11 @@ body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-h
 /* ── AUDIO PLAYER ── */
 .audio-player{padding:36px 28px;display:flex;flex-direction:column;align-items:center;gap:22px;}
 .audio-art{width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:4.2rem;border:2px solid var(--border-bright);flex-shrink:0;}
+.audio-art img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.audio-art.spinning{animation:spin-disc 4s linear infinite;}
+@keyframes spin-disc{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.audio-art::after{content:'';position:absolute;width:30px;height:30px;background:radial-gradient(circle,#111 40%,rgba(201,168,76,.5) 42%,rgba(201,168,76,.2) 55%,transparent 56%);border-radius:50%;z-index:2;pointer-events:none;}
+.vinyl-ring{position:absolute;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,#0a0a10 45%,rgba(201,168,76,.4) 46%,rgba(201,168,76,.15) 65%,transparent 66%);z-index:2;pointer-events:none;}
 .audio-art.playing{box-shadow:0 0 40px rgba(201,168,76,.22);}
 
 .audio-info{text-align:center;}
@@ -307,7 +312,7 @@ audio{display:none;}
         <label>Email Address</label>
         <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/>
       </div>
-      <button class="btn-enter" id="login-btn" onclick="startLogin()">✦ Check My Access</button>
+      <button class="btn-enter" id="login-btn" onclick="startLogin()">✦ Enter the Vault</button>
       <div class="login-error" id="login-error"></div>
       <p class="login-help">
         Enter your email to access your library.<br/>
@@ -335,7 +340,7 @@ audio{display:none;}
   </header>
   <div class="renewal-bar" id="renewal-bar" style="display:none">
     <span>All Access Pass — renews <em id="renewal-date">—</em></span>
-    <a href="YOUR_SHOPIFY_SUBSCRIPTION_MANAGEMENT_URL">Manage →</a>
+    <a href="https://sacredtea.net/account/login" target="_blank">Manage →</a>
   </div>
   <div class="cancelled-bar" id="cancelled-bar" style="display:none">
     <p>⚠ Your subscription is paused. Your downloaded files remain yours.<br/>Resubscribe to unlock full streaming access.</p>
@@ -445,7 +450,8 @@ audio{display:none;}
       <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;">
         <!-- Cover art -->
         <div class="audio-art" id="audio-art">
-          <img id="audio-art-img" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:100%;height:100%;object-fit:cover;border-radius:14px;"/>
+          <img id="audio-art-img" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
+          <div class="vinyl-ring"></div>
         </div>
         <!-- Track info -->
         <div class="audio-info">
@@ -1018,7 +1024,7 @@ async function startLogin(){
     } else {
       document.getElementById('step-loading').style.display='none';
       document.getElementById('step-email').style.display='block';
-      btn.textContent='✦ Check My Access';
+      btn.textContent='✦ Enter the Vault';
       btn.disabled=false;
       err.style.display='block';
       if(data.reason==='no_account'){
@@ -1031,7 +1037,7 @@ async function startLogin(){
     console.error(e);
     document.getElementById('step-loading').style.display='none';
     document.getElementById('step-email').style.display='block';
-    btn.textContent='✦ Check My Access';
+    btn.textContent='✦ Enter the Vault';
     btn.disabled=false;
     err.style.display='block';
     err.textContent='Network error. Please check your connection and try again.';
@@ -1150,6 +1156,7 @@ function playPlaylistTrack(idx){
   a.play().then(()=>{
     document.getElementById('play-pause-btn').textContent='⏸';
     setEQActive(true);
+    document.getElementById('audio-art').classList.add('spinning');
   }).catch(e=>console.error('Playlist play error:',e));
 
   currentPlayingItem=currentAlbum;
@@ -1197,7 +1204,7 @@ function doLogout(){
   document.getElementById('login-error').style.display='none';
   document.getElementById('step-loading').style.display='none';
   document.getElementById('step-email').style.display='block';
-  document.getElementById('login-btn').textContent='✦ Check My Access';
+  document.getElementById('login-btn').textContent='✦ Enter the Vault';
   document.getElementById('login-btn').disabled=false;
   document.getElementById('renewal-bar').style.display='none';
   document.getElementById('cancelled-bar').style.display='none';
@@ -1370,6 +1377,7 @@ function openContent(id){
     currentPlayingItem=item;
     currentPlayingTrackIdx=0;
     updatePlayerHeart();
+    document.getElementById('audio-art').classList.remove('spinning');
   }
   showModal();
 }
@@ -1417,7 +1425,10 @@ function playTrack(idx){
   a.pause();
   a.src=currentAlbum.trackUrls[idx];
   a.load();
-  a.play().catch(e=>console.log('play error:',e));
+  a.play().then(()=>{
+    document.getElementById('audio-art').classList.add('spinning');
+    setEQActive(true);
+  }).catch(e=>console.log('play error:',e));
   document.getElementById('play-pause-btn').textContent='⏸';
   // Show audio player inline by switching views
   document.getElementById('album-view').style.display='none';
@@ -1571,8 +1582,15 @@ function setEQActive(active){
 
 function togglePlay(){
   const a=document.getElementById('audio-el'),btn=document.getElementById('play-pause-btn');
-  if(a.paused){a.play();btn.textContent='⏸';setEQActive(true);}
-  else{a.pause();btn.textContent='▶';setEQActive(false);}
+  if(a.paused){
+    a.play();btn.textContent='⏸';
+    setEQActive(true);
+    document.getElementById('audio-art').classList.add('spinning');
+  } else {
+    a.pause();btn.textContent='▶';
+    setEQActive(false);
+    document.getElementById('audio-art').classList.remove('spinning');
+  }
 }
 
 function showTrackNav(){
@@ -1598,7 +1616,8 @@ function stopAudio(){
   const a=document.getElementById('audio-el');
   a.pause();a.src='';
   document.getElementById('play-pause-btn').textContent='▶';
-  document.getElementById('audio-art').classList.remove('playing');
+  document.getElementById('audio-art').classList.remove('spinning');
+  setEQActive(false);
 }
 function skipAudio(s){const a=document.getElementById('audio-el');a.currentTime=Math.max(0,Math.min(a.duration||0,a.currentTime+s));}
 function setVolume(v){document.getElementById('audio-el').volume=v;}
