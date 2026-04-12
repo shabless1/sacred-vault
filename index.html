@@ -327,6 +327,10 @@ audio{display:none;}
 </div>
 
 <!-- ══ APP ══ -->
+<div id="trial-banner">
+  <span>✦ Free Trial: <span class="trial-days" id="trial-days-text">7 days</span> remaining</span>
+  <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank">Subscribe to keep access →</a>
+</div>
 <div id="app" style="display:none">
   <header class="header">
     <div class="header-logo">Sacred <span>Vault</span></div>
@@ -979,6 +983,27 @@ function loadSession(){
   try{
     const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
     if(!s) return false;
+
+    // Trial session — check expiry
+    if(s.trial){
+      const expires = new Date(s.expires_at);
+      if(new Date() > expires){
+        localStorage.removeItem(SESSION_KEY);
+        // Show expired message
+        const err = document.getElementById('login-error');
+        err.style.display='block';
+        err.innerHTML='Your 7-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
+        return false;
+      }
+      const msRemaining = expires - new Date();
+      const daysRemaining = Math.ceil(msRemaining / (1000*60*60*24));
+      user={email:s.email, name:'Beloved', status:'active', trial:true};
+      showTrialBanner(daysRemaining);
+      startSession();
+      return true;
+    }
+
+    // Regular session
     if((Date.now()-s.ts)/864e5 > SESSION_DAYS){ localStorage.removeItem(SESSION_KEY); return false; }
     user={email:s.email, name:s.name, status:'active', renewalDate:null};
     startSession();
@@ -1211,7 +1236,75 @@ function doLogout(){
   closeModal(); stopAudio();
 }
 
-window.addEventListener('load',()=>{ loadSession(); });
+window.addEventListener('load', async ()=>{
+  // Check for trial code in URL first
+  const params = new URLSearchParams(window.location.search);
+  const trialCode = params.get('trial');
+  if(trialCode){
+    await handleTrialCode(trialCode);
+    return;
+  }
+  loadSession();
+});
+
+async function handleTrialCode(code){
+  // Show loading
+  document.getElementById('step-loading').style.display='block';
+  document.getElementById('step-email').style.display='none';
+
+  try {
+    const res = await fetch('${WORKER_URL}/trial-validate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code})
+    });
+    const data = await res.json();
+
+    if(data.access){
+      // Save trial session
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        email: 'trial-' + code,
+        name: 'Beloved',
+        trial: true,
+        trial_code: code,
+        expires_at: data.expires_at,
+        days_remaining: data.days_remaining,
+        ts: Date.now()
+      }));
+      user = { email: 'trial-' + code, name: 'Beloved', status: 'active', trial: true };
+      // Show trial banner
+      showTrialBanner(data.days_remaining);
+      // Clean URL
+      window.history.replaceState({}, '', window.location.pathname);
+      startSession();
+    } else {
+      document.getElementById('step-loading').style.display='none';
+      document.getElementById('step-email').style.display='block';
+      const err = document.getElementById('login-error');
+      err.style.display='block';
+      if(data.reason === 'trial_expired'){
+        err.innerHTML='Your 7-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
+      } else {
+        err.textContent='Invalid trial link. Please check your link and try again.';
+      }
+    }
+  } catch(e){
+    document.getElementById('step-loading').style.display='none';
+    document.getElementById('step-email').style.display='block';
+    document.getElementById('login-error').style.display='block';
+    document.getElementById('login-error').textContent='Network error. Please try again.';
+  }
+}
+
+function showTrialBanner(daysRemaining){
+  const banner = document.getElementById('trial-banner');
+  const daysText = document.getElementById('trial-days-text');
+  if(!banner) return;
+  daysText.textContent = daysRemaining + ' day' + (daysRemaining === 1 ? '' : 's');
+  banner.style.display='block';
+  // Push app content down
+  document.getElementById('app').style.paddingTop='44px';
+}
 
 document.getElementById('login-email').addEventListener('keyup',e=>{
   if(e.key==='Enter') startLogin();
