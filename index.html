@@ -1605,12 +1605,14 @@ function showTrackNav(){
 
 function prevTrack(){
   if(!currentAlbum||currentTrackIdx<=0)return;
-  playTrack(currentTrackIdx-1);
+  if(currentAlbum.id===-1) playPlaylistTrack(currentTrackIdx-1);
+  else playTrack(currentTrackIdx-1);
 }
 
 function nextTrack(){
   if(!currentAlbum||currentTrackIdx>=currentAlbum.tracks.length-1)return;
-  playTrack(currentTrackIdx+1);
+  if(currentAlbum.id===-1) playPlaylistTrack(currentTrackIdx+1);
+  else playTrack(currentTrackIdx+1);
 }
 function stopAudio(){
   const a=document.getElementById('audio-el');
@@ -1634,7 +1636,8 @@ function onAudioEnd(){
   document.getElementById('audio-art').classList.remove('playing');
   // Auto-advance album tracks
   if(currentAlbum&&currentTrackIdx>=0&&currentTrackIdx<currentAlbum.tracks.length-1){
-    setTimeout(()=>playTrack(currentTrackIdx+1),800);
+    if(currentAlbum.id===-1) setTimeout(()=>playPlaylistTrack(currentTrackIdx+1),800);
+    else setTimeout(()=>playTrack(currentTrackIdx+1),800);
   } else if(currentAlbum){
     document.getElementById('next-track-btn').style.display='none';
   }
