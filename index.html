@@ -169,11 +169,10 @@ body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-h
 
 /* ── AUDIO PLAYER ── */
 .audio-player{padding:36px 28px;display:flex;flex-direction:column;align-items:center;gap:22px;}
-.audio-art{width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:4.2rem;border:2px solid var(--border-bright);flex-shrink:0;}
+.audio-art{width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:4.2rem;border:3px solid rgba(201,168,76,.5);flex-shrink:0;box-shadow:0 0 24px rgba(201,168,76,.2),0 0 0 6px rgba(201,168,76,.08);overflow:hidden;}
 .audio-art img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .audio-art.spinning{/* spinning disabled */}
 
-.vinyl-ring{position:absolute;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,#0a0a10 45%,rgba(201,168,76,.4) 46%,rgba(201,168,76,.15) 65%,transparent 66%);z-index:2;pointer-events:none;}
 .audio-art.playing{box-shadow:0 0 40px rgba(201,168,76,.22);}
 
 .audio-info{text-align:center;}
@@ -450,7 +449,6 @@ audio{display:none;}
         <!-- Cover art -->
         <div class="audio-art" id="audio-art">
           <img id="audio-art-img" src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
-          <div class="vinyl-ring"></div>
         </div>
         <!-- Track info -->
         <div class="audio-info">
@@ -545,7 +543,7 @@ const CONTENT = [
     desc:'A field guide to rewiring the subconscious mind using ancient memory technology and frequency intelligence.',
     fileUrl:'https://drive.google.com/file/d/1YRky1zLF5HrHBd-GIET3yzmYyU5194aN/preview',
     readerUrl:'/reader-gods-memory.html',
-    price:'$14.99' },
+    price:'$29.95' },
 
   { id:2, type:'ebook', title:'The GridWalker Codex',
     subtitle:null,
@@ -555,7 +553,7 @@ const CONTENT = [
     desc:'Sacred cartography for navigating the energetic grids of the earth and the cosmos.',
     fileUrl:'https://drive.google.com/file/d/1cAknI38WawCtC3Q-7DbfhSk7OEIWXXEh/preview',
     readerUrl:'/reader-gridwalker.html',
-    price:'$14.99' },
+    price:'$19.95' },
 
   { id:3, type:'ebook', title:'Moon Money & Magic',
     subtitle:null,
@@ -565,7 +563,7 @@ const CONTENT = [
     desc:'Aligning your financial cycles with lunar rhythms — ancestral wealth meets modern money mastery.',
     fileUrl:'https://drive.google.com/file/d/167NHi9IQIOumkwMsxHI_FfyxH-aGDwbk/preview',
     readerUrl:'/reader-moon-money.html',
-    price:'$12.99' },
+    price:'$19.95' },
 
   // ── AUDIOBOOK ───────────────────────────────────────────
   { id:4, type:'audiobook', title:"God's Memory",
@@ -585,7 +583,7 @@ const CONTENT = [
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/07-MODULE_6%20THE%20RITUAL.mp3',
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/08-%20MODULE_7%20-THE%20WORK%20CONTINUES.mp3'
     ],
-    price:'$17.99' },
+    price:'$29.95' },
 
   // ── ALBUMS ─────────────────────────────────────────────
   { id:5, type:'album', title:'Sacred Grooves',
@@ -614,7 +612,7 @@ const CONTENT = [
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/11-LOTUS%20DREAMS.mp3',
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/FEATHER%20UP%20BONUS%20TRACK.mp3'
     ],
-    price:'$12.99' },
+    price:'$15.00' },
 
   { id:6, type:'album', title:'The BeatniX Ascension',
     subtitle:'Full Album · 18 Tracks',
@@ -650,7 +648,7 @@ const CONTENT = [
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/SWIRL%20(That%20Girl%20Remix).mp3',
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/MERKABAS.mp3'
     ],
-    price:'$14.99' },
+    price:'$15.00' },
 
   { id:7, type:'album', title:'A Compilation of a Forgotten Mixtape',
     subtitle:'Full Album · 11 Tracks',
@@ -677,7 +675,7 @@ const CONTENT = [
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/10-SUPER%20ZEROES.mp3',
       'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/11-LIKE%20THAT%20(remix).mp3'
     ],
-    price:'$9.99' },
+    price:'$15.00' },
 
   // ── SINGLES ────────────────────────────────────────────
   { id:8, type:'music', title:'Black Madonna',
@@ -687,7 +685,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#0E0A0E,#1A0A1A)',
     desc:'An ode to the original divine feminine — sacred, sovereign, and unapologetically Black.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/BLACK%20MADONNA%20mp3.mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
   { id:9, type:'music', title:'Tiamat on the Rise',
     subtitle:null,
@@ -696,7 +694,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#0A1A0E,#001A14)',
     desc:'The primordial dragon mother awakens. A frequency invocation for the age of reclamation.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/TIAMAT%20ON%20THE%20RISE.mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
   { id:10, type:'music', title:'Black Sonata',
     subtitle:null,
@@ -705,7 +703,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#0A0A14,#0E0E20)',
     desc:'Classical meets consciousness — a sonic love letter to Black brilliance.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/My%20Black%20Sonata%20(Remastered).mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
   { id:11, type:'music', title:'My Energy',
     subtitle:null,
@@ -714,7 +712,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#1A1000,#2E2000)',
     desc:'A declaration of energetic sovereignty. Your frequency is your currency.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/MY%20ENERGY%20(remastered).mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
   { id:12, type:'music', title:'My Energy Remix',
     subtitle:'ft. Sha Blyss & Tiye Phoenix',
@@ -723,7 +721,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#1A0800,#2E1000)',
     desc:'The remix brings the fire — Sha Blyss and Tiye Phoenix elevate the frequency even higher.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/My%20Energy%20(ReMix%202)%20%5Bft.%20Sha%20Blyss%20%26%20Tiye%5D.mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
   { id:13, type:'music', title:"Ma's Money",
     subtitle:null,
@@ -732,7 +730,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#001A00,#002200)',
     desc:"Earth-backed, ancestor-approved. The anthem for IN THE BLACK's sovereign wealth movement.",
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/MA_S_MONEY_FINAL_MASTER.mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
 
   { id:15, type:'music', title:'Moon Time',
@@ -742,7 +740,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#0A0A1A,#14143A)',
     desc:'A lunar frequency meditation — attuning to the sacred cycles of time and transformation.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/MOON%20TIME%20(remastered).mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 
   { id:14, type:'music', title:'My Rituals',
     subtitle:null,
@@ -751,7 +749,7 @@ const CONTENT = [
     color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',
     desc:'A sonic altar. Every listen is a ceremony.',
     fileUrl:'https://pub-5477057f532d4ac48d61ee88218942a6.r2.dev/MY%20RITUALS%20(Remastered).mp3',
-    price:'$2.99' },
+    price:'$4.99' },
 ];
 
 // ── STELLA MARIS VIDEOS ────────────────────────────────
@@ -1289,7 +1287,7 @@ function renderStreamLibrary(filter){
         <div class="card-actions">
           ${isActive?`<button class="btn-stream" onclick="event.stopPropagation();openContent(${item.id})">${item.type==='ebook'?'📖 Read':item.type==='album'?'💿 View Tracks':'▶ Play'}</button>`:''}
           ${isActive&&(item.type==='music'||item.type==='audiobook')?`<button class="btn-heart ${isInPlaylist(item.id,0)?'saved':''}" data-item-id="${item.id}" onclick="event.stopPropagation();addSingleToPlaylist(${item.id},this)" title="Add to playlist">${isInPlaylist(item.id,0)?'♥':'♡'} Add</button>`:''}
-          <button class="btn-buy" onclick="event.stopPropagation();buyItem(${item.id})">Buy ${item.price}</button>
+          <button class="btn-buy" onclick="event.stopPropagation();buyItem(${item.id})" title="SACREDPRICE applied at checkout">Buy ${item.price} ✦</button>
         </div>
       </div>
     </div>`;
