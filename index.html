@@ -197,13 +197,16 @@ audio{display:none;}
 .video-desc{font-size:.82rem;color:var(--text-dim);line-height:1.6;}
 
 /* ── ALBUM VIEW ── */
-.album-view{padding:24px;}
+.album-view{padding:24px;background:linear-gradient(160deg,rgba(30,10,50,.6) 0%,rgba(10,10,20,.8) 100%);}
 .album-header{display:flex;gap:20px;align-items:center;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border);}
 .album-art{width:90px;height:90px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;flex-shrink:0;}
 .album-info h3{font-family:var(--font-head);font-size:1.5rem;color:var(--gold-light);}
 .album-info p{font-size:.8rem;color:var(--text-dim);margin-top:4px;}
 .track-list{display:flex;flex-direction:column;gap:4px;}
-.track-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:9px;cursor:pointer;transition:background .15s;border:1px solid transparent;}
+.track-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;transition:all .2s;border:1px solid transparent;}
+.track-row:hover{background:linear-gradient(135deg,rgba(139,92,246,.1),rgba(0,204,255,.05));border-color:rgba(139,92,246,.2);}
+.track-row.playing{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(201,168,76,.08));border-color:rgba(201,168,76,.4);box-shadow:0 0 16px rgba(201,168,76,.1);}
+.track-row.playing .track-num{color:var(--gold);}
 .track-row:hover{background:var(--card-hover);border-color:var(--border);}
 .track-row.playing{background:rgba(201,168,76,.08);border-color:var(--border-bright);}
 .track-num{width:24px;font-size:.76rem;color:var(--text-dim);text-align:center;flex-shrink:0;}
@@ -227,14 +230,18 @@ audio{display:none;}
 .btn-sub-modal{padding:14px 36px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:10px;color:var(--black);font-family:var(--font-body);font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .2s;}
 .btn-sub-modal:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(201,168,76,.3);}
 
-.playlist-row{display:flex;align-items:center;gap:12px;padding:11px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:background .15s;}
-.playlist-row:hover{background:var(--card-hover);}
-.playlist-row .pl-num{width:24px;font-size:.76rem;color:var(--text-dim);text-align:center;flex-shrink:0;}
-.playlist-row .pl-title{flex:1;font-size:.88rem;color:var(--text);}
-.playlist-row .pl-sub{font-size:.72rem;color:var(--text-dim);}
-.playlist-row .pl-play{background:none;border:none;color:var(--gold);font-size:1.1rem;cursor:pointer;padding:4px 8px;}
-.playlist-row .pl-remove{background:none;border:none;color:var(--text-dim);font-size:.9rem;cursor:pointer;padding:4px 8px;transition:color .15s;}
-.playlist-row .pl-remove:hover{color:var(--red);}
+.playlist-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(135deg,rgba(30,10,50,.8),rgba(10,10,30,.8));border:1px solid rgba(139,92,246,.2);border-radius:12px;transition:all .2s;position:relative;overflow:hidden;}
+.playlist-row::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,.05),rgba(0,204,255,.05));opacity:0;transition:opacity .2s;}
+.playlist-row:hover{border-color:rgba(139,92,246,.5);box-shadow:0 0 20px rgba(139,92,246,.15);}
+.playlist-row:hover::before{opacity:1;}
+.playlist-row .pl-num{width:22px;font-size:.74rem;color:rgba(139,92,246,.7);text-align:center;flex-shrink:0;font-style:italic;}
+.pl-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid rgba(139,92,246,.3);}
+.playlist-row .pl-title{flex:1;font-size:.86rem;color:var(--text);line-height:1.3;}
+.playlist-row .pl-sub{font-size:.71rem;color:rgba(139,92,246,.7);margin-top:2px;}
+.playlist-row .pl-play{background:none;border:none;color:#8b5cf6;font-size:1rem;cursor:pointer;padding:4px 8px;transition:color .15s;}
+.playlist-row .pl-play:hover{color:#a78bfa;}
+.playlist-row .pl-remove{background:none;border:none;color:rgba(255,255,255,.2);font-size:.85rem;cursor:pointer;padding:4px 8px;transition:color .15s;}
+.playlist-row .pl-remove:hover{color:#ff4444;}
 .btn-heart{background:none;border:1px solid var(--border);border-radius:6px;font-size:.75rem;cursor:pointer;padding:4px 10px;transition:all .15s;color:var(--text-dim);display:flex;align-items:center;gap:4px;white-space:nowrap;}
 .btn-heart:hover{border-color:var(--red);color:var(--red);}
 .btn-heart:hover{transform:scale(1.2);}
@@ -337,7 +344,7 @@ audio{display:none;}
 
   <main class="library">
     <div class="library-greeting">
-      <h1>Welcome back, <em id="greeting-name">Beloved</em> ✨</h1>
+      <h1>Hi, <em id="greeting-name">Beloved</em> ✦</h1>
       <p id="greeting-sub">Your full library is open. Stream everything. Buy what you love to keep.</p>
     </div>
 
@@ -387,8 +394,8 @@ audio{display:none;}
     <!-- Playlist tab -->
     <div id="tab-playlist-content" style="display:none">
       <div id="playlist-empty" style="text-align:center;padding:60px 20px;color:var(--text-dim);display:none">
-        <div style="font-size:2.5rem;margin-bottom:14px;">♡</div>
-        <p style="font-size:.9rem;line-height:1.7;">Your playlist is empty.<br/>Tap ♡ on any track to add it here.</p>
+        <div style="font-size:2.5rem;margin-bottom:14px;filter:drop-shadow(0 0 12px rgba(139,92,246,.6));">♡</div>
+        <p style="font-size:.9rem;line-height:1.7;color:rgba(139,92,246,.8);">Your playlist is empty.<br/>Tap ♡ on any track to add it here.</p>
       </div>
       <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
         <p id="playlist-count" style="font-size:.84rem;color:var(--text-dim);"></p>
@@ -1098,15 +1105,21 @@ function renderPlaylistTab(){
   if(clearBtn) clearBtn.style.display='block';
   count.textContent=userPlaylist.length+' track'+(userPlaylist.length===1?'':'s')+' saved';
 
-  grid.innerHTML=userPlaylist.map((p,i)=>`
+  grid.innerHTML=userPlaylist.map((p,i)=>{
+    // Find cover art for this track
+    const contentItem = CONTENT.find(c => c.id === p.content_id);
+    const thumb = contentItem?.coverImg || DEFAULT_COVER;
+    return `
     <div class="playlist-row">
       <div class="pl-num">${i+1}</div>
-      <div style="flex:1">
+      <img class="pl-thumb" src="${thumb}" alt="cover"/>
+      <div style="flex:1;min-width:0;">
         <div class="pl-title">${p.track_title||'Unknown Track'}</div>
       </div>
       <button class="pl-play" onclick="playPlaylistTrack(${i})" title="Play">▶</button>
       <button class="pl-remove" onclick="removeFromPlaylist(${i})" title="Remove">✕</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function playPlaylistTrack(idx){
