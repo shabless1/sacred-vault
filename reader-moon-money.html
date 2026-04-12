@@ -91,6 +91,13 @@ body{
   .book-wrap{padding:65px 18px 80px;}
   .toolbar-title{display:none;}
 }
+
+/* ── BOOKMARK SYSTEM ── */
+.bookmark-btn{position:fixed;bottom:24px;right:20px;z-index:200;background:linear-gradient(135deg,rgba(30,10,50,.95),rgba(10,10,30,.95));border:1px solid rgba(139,92,246,.5);border-radius:50px;padding:10px 18px;color:#a78bfa;font-family:'Nunito',sans-serif;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 0 20px rgba(139,92,246,.2);transition:all .2s;backdrop-filter:blur(10px);}
+.bookmark-btn:hover{border-color:#a78bfa;box-shadow:0 0 30px rgba(139,92,246,.4);}
+.bookmark-btn.saved{border-color:#E8C97A;color:#E8C97A;box-shadow:0 0 20px rgba(201,168,76,.3);}
+.bookmark-toast{position:fixed;bottom:80px;right:20px;z-index:300;background:rgba(139,92,246,.9);color:#fff;padding:8px 16px;border-radius:8px;font-size:.8rem;opacity:0;transition:opacity .3s;pointer-events:none;backdrop-filter:blur(8px);}
+.bookmark-toast.show{opacity:1;}
 </style>
 </head>
 <body>
@@ -2600,6 +2607,78 @@ window.addEventListener('scroll', () => {
   const pct = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
   document.getElementById('progress').style.width = Math.min(100, pct) + '%';
 });
+</script>
+
+<button class="bookmark-btn" id="bookmark-btn" onclick="toggleBookmark()">🔖 Save Place</button>
+<div class="bookmark-toast" id="bookmark-toast"></div>
+
+<script>
+const BOOK_KEY = 'sv_bookmark_moon-money';
+const SCROLL_KEY = 'sv_scroll_moon-money';
+
+// Restore scroll position on load
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem(SCROLL_KEY);
+  if(saved) {
+    setTimeout(() => {
+      window.scrollTo(0, parseInt(saved));
+      updateBookmarkBtn();
+    }, 300);
+  }
+});
+
+// Save scroll position continuously
+let scrollTimer;
+window.addEventListener('scroll', () => {
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    localStorage.setItem(SCROLL_KEY, window.scrollY);
+    updateBookmarkBtn();
+  }, 500);
+  // Update progress
+  const doc = document.documentElement;
+  const pct = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+  document.getElementById('progress').style.width = Math.min(100, pct) + '%';
+});
+
+function toggleBookmark() {
+  const currentPos = window.scrollY;
+  const saved = localStorage.getItem(BOOK_KEY);
+  
+  if(saved && parseInt(saved) === currentPos) {
+    // Already bookmarked here - jump to it or clear
+    localStorage.removeItem(BOOK_KEY);
+    showToast('Bookmark removed');
+    updateBookmarkBtn();
+  } else {
+    localStorage.setItem(BOOK_KEY, currentPos);
+    showToast('📌 Place saved!');
+    updateBookmarkBtn();
+  }
+}
+
+function updateBookmarkBtn() {
+  const btn = document.getElementById('bookmark-btn');
+  const saved = localStorage.getItem(BOOK_KEY);
+  if(saved) {
+    const pct = Math.round(parseInt(saved) / (document.documentElement.scrollHeight - window.innerHeight) * 100);
+    btn.textContent = '📌 Bookmarked (' + pct + '%)';
+    btn.classList.add('saved');
+  } else {
+    btn.textContent = '🔖 Save Place';
+    btn.classList.remove('saved');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('bookmark-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// Init bookmark button state
+updateBookmarkBtn();
 </script>
 </body>
 </html>
