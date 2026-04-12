@@ -997,7 +997,7 @@ function loadSession(){
         return false;
       }
       const msRemaining = expires - new Date();
-      const daysRemaining = Math.ceil(msRemaining / (1000*60*60*24));
+      const daysRemaining = Math.max(1, Math.ceil(msRemaining / (1000*60*60*24)));
       user={email:s.email, name:'Beloved', status:'active', trial:true};
       showTrialBanner(daysRemaining);
       startSession();
@@ -1306,9 +1306,9 @@ function showTrialBanner(daysRemaining){
   const banner = document.getElementById('trial-banner');
   const daysText = document.getElementById('trial-days-text');
   if(!banner) return;
-  daysText.textContent = daysRemaining + ' day' + (daysRemaining === 1 ? '' : 's');
+  const days = parseInt(daysRemaining) || 7;
+  daysText.textContent = days + ' day' + (days === 1 ? '' : 's');
   banner.style.display='block';
-  // Push app content down
   document.getElementById('app').style.paddingTop='44px';
 }
 
