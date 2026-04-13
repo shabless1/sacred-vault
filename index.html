@@ -359,7 +359,7 @@ audio{display:none;}
     <div class="tab-row">
       <button class="tab-btn active" id="tab-stream" onclick="switchTab('stream')">✦ Stream Library</button>
       <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')">📺 Stella Maris TV</button>
-      <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">🎬 Patreon Vault</button>
+      <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">📂 The Akashic Files</button>
       <button class="tab-btn" id="tab-playlist" onclick="switchTab('playlist')">♡ My Playlist</button>
     </div>
 
@@ -391,7 +391,7 @@ audio{display:none;}
       <div class="grid" id="content-grid"></div>
     </div>
 
-    <!-- Patreon Vault tab -->
+    <!-- Akashic Files tab -->
     <div id="tab-patreon-content" style="display:none">
       <div style="background:rgba(139,111,212,.08);border:1px solid rgba(139,111,212,.25);border-radius:10px;padding:12px 18px;margin-bottom:22px;font-size:.84rem;color:#c4aff4;">
         🎬 These are full-length exclusive videos — complete uncut versions not available anywhere else.
@@ -931,11 +931,95 @@ const PATREON_VIDEOS = [
     youtubeId:'RM6ToAauMDA' },
 
   { id:210, type:'video', title:"The Spirits of California",
-    episode:'Full Length', emoji:'🎬',
+    episode:'Full Length', emoji:'📂',
     color:'linear-gradient(135deg,#0A001A,#14002E)',
     coverImg:SACRED_UNLOCKED,
-    desc:'Full-length exclusive video — complete uncut version available only inside the House of MahMah Tea Sacred Vault.',
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
     youtubeId:'JwVEki8MgVA' },
+
+  { id:211, type:'video', title:"XX Chromosomes",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'xDZGfWe6Ct8' },
+
+  { id:212, type:'video', title:"What They Never Told You About The Vatican",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'yI__vfQDUBA' },
+
+  { id:213, type:'video', title:"Is The Sun Real?",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'QqI5UZdQP5s' },
+
+  { id:214, type:'video', title:"The Red Sun",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'ra8EHkNgyzQ' },
+
+  { id:215, type:'video', title:"The Betrayal of Women",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'2f776F_rFbU' },
+
+  { id:216, type:'video', title:"Who Are the Archangels?",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'ab3kgh7ctkg' },
+
+  { id:217, type:'video', title:"The Anunnaki Priesthood Part 1",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'QdkHB6urRpk' },
+
+  { id:218, type:'video', title:"Who is Sophia?",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'IRJJFJ5qVFM' },
+
+  { id:219, type:'video', title:"Religious Symbols Decoded",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'587dFljg4pA' },
+
+  { id:220, type:'video', title:"The Connection Between Ivy Leagues & The Vatican",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'17eEdoSmsyQ' },
+
+  { id:221, type:'video', title:"Black Men",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'4DRsCC1BfoE' },
+
+  { id:222, type:'video', title:"The 13 Colonies",
+    episode:'Full Length', emoji:'📂',
+    color:'linear-gradient(135deg,#0A001A,#14002E)',
+    coverImg:SACRED_UNLOCKED,
+    desc:'Exclusive full-length video — available only inside The Akashic Files.',
+    youtubeId:'4StFXOyrZ0g' },
 ];
 
 
@@ -1430,7 +1514,7 @@ function renderVideos(){
   }).join('');
 }
 
-// ── RENDER PATREON VAULT ──
+// ── RENDER THE AKASHIC FILES ──
 function renderPatreonVideos(){
   const isActive=user&&user.status==='active';
   document.getElementById('patreon-grid').innerHTML=PATREON_VIDEOS.map(v=>{
