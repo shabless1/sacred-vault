@@ -315,7 +315,7 @@ audio{display:none;}
       <p class="login-help">
         Enter your email to access your library.<br/>
         Subscribers are verified instantly.<br/><br/>
-        <a href="#" onclick="startTrial()" style="color:var(--gold);font-weight:600;">✦ Start your 7-day free trial →</a><br/><br/>
+        <a href="#" onclick="startTrial()" style="color:var(--gold);font-weight:600;">✦ Start your 3-day free trial →</a><br/><br/>
         Already a member? Just enter your email above.<br/>
         Need help? <a href="mailto:support@sacredtea.net">Contact support →</a>
       </p>
@@ -1077,7 +1077,7 @@ function loadSession(){
         // Show expired message
         const err = document.getElementById('login-error');
         err.style.display='block';
-        err.innerHTML='Your 7-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
+        err.innerHTML='Your 3-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
         return false;
       }
       const msRemaining = expires - new Date();
@@ -1371,7 +1371,7 @@ async function startTrial(){
       btn.disabled=false;
       err.style.display='block';
       if(data.reason === 'trial_expired'){
-        err.innerHTML='Your 7-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
+        err.innerHTML='Your 3-day free trial has ended. <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank" style="color:var(--gold)">Subscribe to continue →</a>';
       } else {
         err.textContent='Something went wrong. Please try again.';
       }
@@ -1413,7 +1413,7 @@ function startSession(){
         // Trial user — hide renewal bar, show trial banner instead
         document.getElementById('sub-badge-text').textContent='Free Trial — Active';
         document.getElementById('renewal-bar').style.display='none';
-        document.getElementById('greeting-sub').textContent='Welcome to the Sacred Vault. Enjoy your 7-day free trial. 🖤';
+        document.getElementById('greeting-sub').textContent='Welcome to the Sacred Vault. Enjoy your 3-day free trial. 🖤';
       } else {
         document.getElementById('sub-badge-text').textContent='All Access — Active';
         document.getElementById('renewal-bar').style.display='flex';
