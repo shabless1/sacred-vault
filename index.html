@@ -1051,6 +1051,44 @@ const PATREON_VIDEOS = [
     youtubeId:'1mM22iopJ9w' },
 ];
 
+const TIKTOK_VIDEOS = [
+  { id:301, type:'video', title:'Guardians & Gatekeepers',
+    episode:'TikTok Live', emoji:'📱',
+    color:'linear-gradient(135deg,#001A1A,#002E2E)',
+    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    desc:'Live session with MahMah Tea — Guardians & Gatekeepers.',
+    youtubeId:'KKqk5FGDSuU' },
+  { id:302, type:'video', title:'Late Night with MahMah Tea',
+    episode:'TikTok Live', emoji:'📱',
+    color:'linear-gradient(135deg,#001A1A,#002E2E)',
+    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    desc:'Late Night with MahMah Tea — live and unfiltered.',
+    youtubeId:'tBv3H65oarI' },
+  { id:303, type:'video', title:'Astrology with MahMah Tea',
+    episode:'TikTok Live', emoji:'📱',
+    color:'linear-gradient(135deg,#001A1A,#002E2E)',
+    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    desc:'Astrology with MahMah Tea — live cosmic intelligence.',
+    youtubeId:'0nJmel25J6E' },
+  { id:304, type:'video', title:'Late Night TikTok Live',
+    episode:'TikTok Live', emoji:'📱',
+    color:'linear-gradient(135deg,#001A1A,#002E2E)',
+    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    desc:'Late Night TikTok Live with MahMah Tea.',
+    youtubeId:'Q0-1P4exQgI' },
+  { id:305, type:'video', title:'What If?? w/Sha Blyss aka MahMah Tea',
+    episode:'TikTok Live', emoji:'📱',
+    color:'linear-gradient(135deg,#001A1A,#002E2E)',
+    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    desc:'What If?? — a live exploration with Sha Blyss aka MahMah Tea.',
+    youtubeId:'NwCA-2jodMk' },
+  { id:306, type:'video', title:'Flashback (Happy Summer Solstice!)',
+    episode:'TikTok Live', emoji:'📱',
+    color:'linear-gradient(135deg,#001A1A,#002E2E)',
+    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    desc:'Flashback — Happy Summer Solstice! Live with MahMah Tea.',
+    youtubeId:'xTQszzSC870' },
+];
 
 const SHOPIFY_URLS = {
   1: 'https://sacredtea.net/products/gods-memory-reprogramming-the-conscious-mind-audiobook',
@@ -1546,6 +1584,24 @@ function renderVideos(){
 }
 
 // ── RENDER THE AKASHIC FILES ──
+function renderTikTokVideos(){
+  const grid = document.getElementById('tiktok-grid');
+  if(!grid) return;
+  grid.innerHTML = TIKTOK_VIDEOS.map(v => {
+    const thumb = v.coverImg ? `background-image:url(${v.coverImg});background-size:cover;background-position:center;` : `background:${v.color}`;
+    return `<div class="content-card" onclick="openContent(${v.id})">
+      <div class="card-art" style="${thumb}"></div>
+      <div class="card-body">
+        <div class="card-title">${v.title}</div>
+        <div class="card-sub">${v.episode}</div>
+        <div class="card-actions">
+          <button class="btn-stream" onclick="event.stopPropagation();openContent(${v.id})">▶ Watch</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderPatreonVideos(){
   const isActive=user&&user.status==='active';
   document.getElementById('patreon-grid').innerHTML=PATREON_VIDEOS.map(v=>{
