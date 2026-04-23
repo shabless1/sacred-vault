@@ -360,6 +360,7 @@ audio{display:none;}
       <button class="tab-btn active" id="tab-stream" onclick="switchTab('stream')">✦ Stream Library</button>
       <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')">📺 Stella Maris TV</button>
       <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">📂 The Akashic Files</button>
+      <button class="tab-btn" id="tab-tiktok" onclick="switchTab('tiktok')">📱 MahMah Tea TikTok Live</button>
       <button class="tab-btn" id="tab-playlist" onclick="switchTab('playlist')">♡ My Playlist</button>
     </div>
 
@@ -400,6 +401,11 @@ audio{display:none;}
     </div>
 
     <!-- Playlist tab -->
+    <!-- TikTok Live tab -->
+    <div id="tab-tiktok-content" style="display:none">
+      <div class="grid" id="tiktok-grid"></div>
+    </div>
+
     <div id="tab-playlist-content" style="display:none">
       <div id="playlist-empty" style="text-align:center;padding:60px 20px;color:var(--text-dim);display:none">
         <div style="font-size:2.5rem;margin-bottom:14px;filter:drop-shadow(0 0 12px rgba(139,92,246,.6));">♡</div>
@@ -1454,6 +1460,7 @@ function startSession(){
     renderStreamLibrary('all');
     renderVideos();
     renderPatreonVideos();
+    renderTikTokVideos();
     loadPlaylist();
   },400);
 }
@@ -1467,11 +1474,12 @@ function goSubscribe(){
 
 // ── TABS ──
 function switchTab(tab){
-  ['stream','videos','patreon','playlist'].forEach(t=>{
+  ['stream','videos','patreon','tiktok','playlist'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',tab===t);
     document.getElementById('tab-'+t+'-content').style.display=tab===t?'block':'none';
   });
   if(tab==='playlist') renderPlaylistTab();
+  if(tab==='tiktok') renderTikTokVideos();
 }
 
 // ── RENDER STREAM LIBRARY ──
@@ -1654,7 +1662,7 @@ function playTrack(idx){
 }
 
 function openVideo(id){
-  const v=VIDEOS.find(x=>x.id===id)||PATREON_VIDEOS.find(x=>x.id===id);
+  const v=VIDEOS.find(x=>x.id===id)||PATREON_VIDEOS.find(x=>x.id===id)||TIKTOK_VIDEOS.find(x=>x.id===id);
   if(!v)return;
   resetModal();
   document.getElementById('modal-title').textContent=v.title;
