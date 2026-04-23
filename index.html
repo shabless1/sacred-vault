@@ -1587,7 +1587,7 @@ function renderVideos(){
 function renderTikTokVideos(){
   const grid = document.getElementById('tiktok-grid');
   if(!grid) return;
-  const isActive = user && user.status === 'active';
+  const isActive = user && (user.status === 'active' || user.trial === true);
   grid.innerHTML = TIKTOK_VIDEOS.map(v => {
     const locked = !isActive;
     return `<div class="content-card${locked?' locked':''}" ${!locked?`onclick="openVideo(${v.id})"`:''}>
@@ -1595,8 +1595,7 @@ function renderTikTokVideos(){
         ${v.coverImg
           ? `<img src="${v.coverImg}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1;" />`
           : `<span style="font-size:3rem">${v.emoji}</span>`}
-        <div class="cover-text" style="z-index:3;position:relative">TikTok Live</div>
-        <div class="type-badge badge-video" style="z-index:3;position:relative">📱 Live</div>
+
       </div>
       ${locked?`<div class="lock-overlay"><div class="lock-icon">🔒</div><p>Subscribe to watch</p><button class="btn-unlock" onclick="event.stopPropagation();openUpgrade()">$19.99/mo →</button></div>`:''}
       <div class="card-body">
