@@ -1587,15 +1587,24 @@ function renderVideos(){
 function renderTikTokVideos(){
   const grid = document.getElementById('tiktok-grid');
   if(!grid) return;
+  const isActive = user && user.status === 'active';
   grid.innerHTML = TIKTOK_VIDEOS.map(v => {
-    const thumb = v.coverImg ? `background-image:url(${v.coverImg});background-size:cover;background-position:center;` : `background:${v.color}`;
-    return `<div class="content-card" onclick="openContent(${v.id})">
-      <div class="card-art" style="${thumb}"></div>
+    const locked = !isActive;
+    return `<div class="content-card${locked?' locked':''}" ${!locked?`onclick="openVideo(${v.id})"`:''}>
+      <div class="card-cover" style="background:${v.color}">
+        ${v.coverImg
+          ? `<img src="${v.coverImg}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1;" />`
+          : `<span style="font-size:3rem">${v.emoji}</span>`}
+        <div class="cover-text" style="z-index:3;position:relative">TikTok Live</div>
+        <div class="type-badge badge-video" style="z-index:3;position:relative">📱 Live</div>
+      </div>
+      ${locked?`<div class="lock-overlay"><div class="lock-icon">🔒</div><p>Subscribe to watch</p><button class="btn-unlock" onclick="event.stopPropagation();openUpgrade()">$19.99/mo →</button></div>`:''}
       <div class="card-body">
         <div class="card-title">${v.title}</div>
-        <div class="card-sub">${v.episode}</div>
+        <div class="card-meta">MahMah Tea · TikTok Live</div>
+        <div class="card-desc">${v.desc}</div>
         <div class="card-actions">
-          <button class="btn-stream" onclick="event.stopPropagation();openContent(${v.id})">▶ Watch</button>
+          ${isActive?`<button class="btn-stream" onclick="event.stopPropagation();openVideo(${v.id})">▶ Watch</button>`:''}
         </div>
       </div>
     </div>`;
