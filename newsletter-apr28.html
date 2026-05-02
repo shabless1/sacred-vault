@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mah's Money · The In The Black Newsletter — April 27, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #ffffff; color: #1a1a1a; font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.75; font-size: 16px; }
+  .back-bar { position: sticky; top: 0; z-index: 100; background: #ffffff; border-bottom: 1px solid #c9a84c; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+  .back-btn { font-size: 12px; font-weight: 500; color: #a07830; text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; border: 0.5px solid #c9a84c; border-radius: 20px; padding: 6px 16px; cursor: pointer; background: none; }
+  .back-btn:hover { background: #c9a84c; color: #ffffff; }
+  .back-label { font-size: 11px; color: #888; letter-spacing: 0.08em; text-transform: uppercase; }
+  .page { max-width: 680px; margin: 0 auto; padding: 0 0 60px 0; background: #ffffff; }
+  .inner { padding: 0 32px; }
+  .hero-image { width: 100%; height: 300px; object-fit: cover; object-position: center top; display: block; filter: brightness(0.85); }
+  .masthead { border-top: 1px solid #c9a84c; border-bottom: 1px solid #c9a84c; padding: 22px 32px; margin-bottom: 48px; display: flex; justify-content: space-between; align-items: center; background: #ffffff; }
+  .masthead-meta { font-size: 11px; font-weight: 400; color: #555; letter-spacing: 0.1em; text-align: right; line-height: 1.9; text-transform: uppercase; }
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.22em; color: #c9a84c; text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 0.5px; background: #e0d8cc; }
+  .intro { font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px; color: #1a1a1a; margin-bottom: 24px; line-height: 1.7; }
+  p { margin-bottom: 14px; color: #2a2a2a; font-size: 16.5px; }
+  .hi-green { color: #3a8a00; font-weight: 500; }
+  .hi-red { color: #cc2200; font-weight: 500; }
+  .hi-gold { color: #a07830; font-weight: 500; }
+  .hi-white { color: #12245e; font-weight: 500; }
+  .hi-silver { color: #445566; font-weight: 500; }
+  .glyph { color: #445566; font-weight: 700; font-size: 1.05em; }
+  .callout { border-left: 3px solid #c9a84c; background: #fdf8ef; padding: 16px 20px; margin: 22px 0; color: #2a2a2a; border-radius: 0 6px 6px 0; font-size: 16px; line-height: 1.7; }
+  .callout-red { border-left: 3px solid #cc2200; background: #fdf0f0; padding: 16px 20px; margin: 22px 0; color: #2a2a2a; border-radius: 0 6px 6px 0; font-size: 16px; line-height: 1.7; }
+  .callout-green { border-left: 3px solid #3a8a00; background: #f0f8f0; padding: 16px 20px; margin: 22px 0; color: #2a2a2a; border-radius: 0 6px 6px 0; font-size: 16px; line-height: 1.7; }
+  .bullet-list { list-style: none; margin: 14px 0 22px; }
+  .bullet-list li { padding: 9px 0 9px 22px; position: relative; color: #2a2a2a; font-size: 15.5px; border-bottom: 0.5px solid #e8e4dc; line-height: 1.65; }
+  .bullet-list li::before { content: '›'; position: absolute; left: 0; color: #a07830; font-size: 20px; line-height: 1.4; }
+  .moon-gate { background: #fdf8ef; border: 0.5px solid #e8d8b0; border-left: 3px solid #c9a84c; border-radius: 0 8px 8px 0; padding: 26px 28px; margin: 28px 0; }
+  .moon-gate-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #a07830; margin-bottom: 22px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .moon-day { display: grid; grid-template-columns: 40px 112px 1fr; gap: 8px 14px; margin-bottom: 18px; font-size: 14px; align-items: start; border-bottom: 0.5px solid #e8e0d0; padding-bottom: 16px; }
+  .moon-day:last-child { border-bottom: none; padding-bottom: 0; }
+  .moon-icon { padding-top: 2px; font-size: 20px; line-height: 1.2; }
+  .moon-date { color: #12245e; font-weight: 500; padding-top: 4px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.6; }
+  .moon-desc { color: #333333; line-height: 1.65; }
+  .moon-desc strong { color: #12245e; font-weight: 500; }
+  .moon-alert { margin-top: 8px; background: #f0f8e8; border: 0.5px solid #b8d8a0; border-left: 2px solid #3a8a00; border-radius: 0 4px 4px 0; padding: 8px 12px; font-size: 12px; color: #3a8a00; line-height: 1.6; }
+  .moon-new { margin-top: 20px; padding-top: 18px; border-top: 0.5px solid #e8d8b0; font-size: 13px; color: #666; font-style: italic; line-height: 1.7; }
+  .moon-new .gate-call { color: #3a8a00; font-style: normal; font-weight: 500; }
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 22px 0; }
+  .market-card { background: #f8f5f0; border: 0.5px solid #e0d8cc; border-radius: 8px; padding: 14px 16px; }
+  .market-ticker { font-size: 10px; font-weight: 500; color: #a07830; letter-spacing: 0.14em; margin-bottom: 5px; text-transform: uppercase; }
+  .market-price { font-size: 19px; font-weight: 700; color: #1a1a1a; font-family: 'Playfair Display', serif; margin-bottom: 5px; }
+  .market-sub { font-size: 10px; color: #3a8a00; margin-bottom: 4px; }
+  .market-sub-red { font-size: 10px; color: #cc2200; margin-bottom: 4px; }
+  .market-note { font-size: 11px; color: #777; line-height: 1.45; }
+  .spotlight { background: #f5f5fc; border: 0.5px solid #d0d0e8; border-left: 3px solid #445566; border-radius: 0 8px 8px 0; padding: 28px; margin: 28px 0; }
+  .spotlight-name { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  .spotlight-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; color: #12245e; background: #eaeef8; border: 0.5px solid #c0c8e0; border-radius: 20px; padding: 5px 14px; display: inline-block; margin-bottom: 16px; text-transform: uppercase; }
+  .spotlight-thesis { font-size: 15px; color: #444; line-height: 1.75; margin-bottom: 18px; }
+  .spotlight-point { padding: 12px 0; border-bottom: 0.5px solid #d8d8ee; font-size: 14px; color: #333; display: flex; gap: 14px; align-items: flex-start; line-height: 1.65; }
+  .spotlight-point:last-child { border-bottom: none; }
+  .spotlight-point .dot { color: #12245e; flex-shrink: 0; font-size: 20px; line-height: 1.3; }
+  .spotlight-point strong { color: #12245e; font-weight: 500; }
+  .spotlight-bottom { margin-top: 16px; padding-top: 14px; border-top: 0.5px solid #d0d0e8; font-size: 13px; color: #666; font-style: italic; }
+  .lens-box { border-top: 1px solid #e0d8cc; border-bottom: 1px solid #e0d8cc; padding: 32px 0; margin: 30px 0; }
+  .lens-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #2a2a2a; line-height: 1.95; }
+  .lens-sig { margin-top: 20px; font-size: 12px; color: #a07830; letter-spacing: 0.07em; }
+  .glossary { margin: 18px 0; }
+  .glossary-item { padding: 12px 0; border-bottom: 0.5px solid #eeebe4; display: grid; grid-template-columns: 145px 1fr; gap: 16px; font-size: 14px; align-items: start; }
+  .glossary-term { color: #12245e; font-weight: 500; }
+  .glossary-def { color: #555; line-height: 1.6; }
+  .final-word { text-align: center; padding: 44px 0; }
+  .final-word p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #2a2a2a; line-height: 1.95; text-align: center; }
+  .final-word .sig { margin-top: 22px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 11px; font-weight: 500; color: #a07830; letter-spacing: 0.14em; text-transform: uppercase; }
+  .community-hook { text-align: center; padding: 24px 28px; background: #fdf8ef; border: 0.5px solid #e8d8b0; border-radius: 8px; margin: 32px 0; }
+  .community-hook p { font-size: 14px; color: #555; text-align: center; line-height: 1.7; }
+  .community-hook strong { color: #3a8a00; font-weight: 500; }
+  .disclaimer { font-size: 11px; color: #aaa; text-align: center; line-height: 1.9; padding-top: 22px; border-top: 0.5px solid #eee; }
+  @media(max-width:600px){ .market-grid{grid-template-columns:1fr 1fr;} .glossary-item{grid-template-columns:1fr;} .moon-day{grid-template-columns:40px 1fr;grid-template-rows:auto auto;} .moon-icon{grid-column:1;grid-row:1/span 2;} .moon-date{grid-column:2;grid-row:1;} .moon-desc{grid-column:2;grid-row:2;margin-top:4px;} }
+</style>
+</head>
+<body>
+<div class="back-bar">
+  <button class="back-btn" onclick="window.history.back()">← Back to Vault</button>
+  <span class="back-label">Ma's Money · The In The Black Newsletter</span>
+</div>
+<div class="page">
+  <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_Ultra-realistic_cinematic_photograph_of_dark_skinn_0333d464-cbed-45cc-a944-260a402b906d_1.png?v=1777217098" class="hero-image" alt="Mah's Money Community">
+  <div class="masthead">
+    <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_create_a_corporate_logo_with_the_name_in_big_bold__f6f4f19f-f24b-4d29-9be3-fe8ec9ca39e5_3.png?v=1773250897" alt="Mah's Money" style="height:64px;width:auto;display:block;object-fit:contain;">
+    <div class="masthead-meta">Pulse of the Week<br>Sunday · April 27, 2026</div>
+  </div>
+  <div class="inner">
+  <div class="section-label">The Sky Before the Story</div>
+  <p class="intro">Family… the door just closed behind us. A new one is open. And we are the first people walking through it.</p>
+  <p>Everything we watched building over the last two issues — Uranus grinding toward the edge of Taurus, Venus loading up at 29°, markets swinging wildly — all of it was the <span class="hi-gold">29th degree doing what it does.</span> Squeezing every last expression out of one era before releasing into the next.</p>
+  <p>Last week gave us the proof. <span class="hi-white">S&amp;P and Nasdaq both hit all-time highs.</span> The hedge funds bought a record <span class="hi-green">$86 billion in stocks over five sessions</span> — accumulating earth assets at maximum Taurus pressure before Uranus crossed out of that sign forever.</p>
+  <div class="callout"><span class="hi-gold">April 24th</span> — Venus conjuncted Uranus at 29° Taurus AND Venus ingressed Gemini. Gold moved <em>up</em> instead of down on a hawkish Fed signal. The market <span class="hi-white">switched sides.</span> That is Venus into Gemini in real time.</div>
+  <p>Now Uranus is in Gemini. <span class="hi-green">Anything can happen — and fast.</span> This is shake up, wake up, sudden break up energy. Uranus is full of surprises and Gemini is full of jokes. That Papa Legba vibe with a twist of Oshun in the mix.</p>
+  <div class="callout-red"><span class="hi-silver">Saturn conjunct Neptune in Aries</span> is still active. Saturn is government and military authority. Neptune is oil, illusion, and the <em>hidden hand.</em> Together in Aries — the sign of war — this is the signature of <span class="hi-white">a conflict that is actually an economic power play dressed in military clothing.</span> Ask the question Neptune always demands: who benefits from the Strait being closed?</div>
+  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #e0d8cc;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#a07830;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #e0d8cc;width:40%;"></td></tr></table>
+  <div class="inner">
+  <div class="section-label">Moon Gate — April 27 to May 2</div>
+  <div class="moon-gate">
+    <div class="moon-gate-title">⊙ April 27 – May 2 · Lunar Roadmap</div>
+    <div class="moon-day"><div class="moon-icon">🌘</div><div class="moon-date">MON 4/27<br>Moon in Virgo<br>Void all day</div><div class="moon-desc"><strong>Void of Course from 7:12 AM.</strong> <span class="hi-red">Void moons don't initiate well.</span> This is the day Uranus officially ingresses Gemini. Observe. Don't execute. The Universe is changing clothes.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌘</div><div class="moon-date">TUE 4/28<br>Moon enters Libra 5:03 AM</div><div class="moon-desc"><strong>Moon trine Uranus 5:17 AM · Moon opposition Neptune · Moon trine Venus.</strong><div class="moon-alert">⚡ WATCH: Moon's FIRST aspect after entering Libra is a trine to freshly ingressed Uranus in Gemini. Libra rules law and agreements. This is the CLARITY Act window.</div></div></div>
+    <div class="moon-day"><div class="moon-icon">🌗</div><div class="moon-date">WED 4/29<br>Moon in Libra<br>Powell's Last FOMC</div><div class="moon-desc"><strong>Moon opposition Mars · Moon square Jupiter.</strong> Jerome Powell speaks for the last time as Federal Reserve Chair. <span class="hi-red">Rate hold is 99.5% certain — but every word of his exit statement will be parsed.</span></div></div>
+    <div class="moon-day"><div class="moon-icon">🌑</div><div class="moon-date">THU 4/30<br>Void → Scorpio 3:02 PM</div><div class="moon-desc"><strong>Moon enters Scorpio 3:02 PM · Moon quincunx Uranus 3:33 PM.</strong> The void burns most of the day. Then the Moon steps into <span class="hi-red">Scorpio.</span> At 3:33 PM — <span class="hi-gold">expect a surprise adjustment in the late afternoon.</span> Know your levels before 3 PM.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌕</div><div class="moon-date">FRI 5/1<br>FULL MOON 1:23 PM ET</div><div class="moon-desc"><strong>Full Moon at 11°21' Scorpio · Venus sextile Saturn 2:45 PM.</strong> This is the grand finale. The Full Moon in Scorpio is a <span class="hi-red">revelation moment.</span> <span class="hi-green">Venus sextile Saturn</span> is the stabilizing anchor — structure supporting value. <span class="hi-gold">The pendulum swings — but the foundation holds for those who built one.</span></div></div>
+    <div class="moon-day"><div class="moon-icon">🌕</div><div class="moon-date">SAT 5/2<br>Mercury → Taurus</div><div class="moon-desc"><strong>Mercury ingresses Taurus 10:57 PM.</strong> Mercury into Taurus shifts the message from fire to earth, from aggression to resources. <span class="hi-green">Watch what gets said publicly Saturday night — it may be the most grounded communication of the entire week.</span></div></div>
+    <div class="moon-new">The full revelation lands on <span class="gate-call">Friday May 1 at 1:23 PM ET.</span> Everything before Friday is setup. Everything after is integration.</div>
+  </div>
+  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #e0d8cc;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#a07830;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #e0d8cc;width:40%;"></td></tr></table>
+  <div class="inner">
+  <div class="section-label">How This Hits the Markets</div>
+  <div class="market-grid">
+    <div class="market-card"><div class="market-ticker">S&amp;P 500</div><div class="market-price">7,165</div><div class="market-sub">At all-time high territory</div><div class="market-note">Powell exit language Wednesday will test this level.</div></div>
+    <div class="market-card"><div class="market-ticker">NASDAQ</div><div class="market-price">24,837</div><div class="market-sub">Tech at record highs</div><div class="market-note">Uranus in Gemini activates tech. AI infrastructure is the sector story.</div></div>
+    <div class="market-card"><div class="market-ticker">BTC</div><div class="market-price">$77,852</div><div class="market-sub">↑ from $74,242 last week</div><div class="market-note">CLARITY Act week. Where BTC goes may signal institutional confidence.</div></div>
+    <div class="market-card"><div class="market-ticker">GOLD</div><div class="market-price">$4,741</div><div class="market-sub-red">Off highs after Warsh news</div><div class="market-note">Structural case unchanged. Full Moon Friday may force a directional decision.</div></div>
+    <div class="market-card"><div class="market-ticker">SILVER</div><div class="market-price">$76.41</div><div class="market-sub-red">Repositioning phase</div><div class="market-note">Support $74. Watch $80 resistance.</div></div>
+    <div class="market-card"><div class="market-ticker">CRUDE OIL</div><div class="market-price">$94.40</div><div class="market-note">Iran resolution = $10–20 immediate drop. Escalation = back above $100.</div></div>
+  </div>
+  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #e0d8cc;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#a07830;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #e0d8cc;width:40%;"></td></tr></table>
+  <div class="inner">
+  <div class="section-label">Legislation Watch — CLARITY Act</div>
+  <div class="spotlight">
+    <div class="spotlight-name">CLARITY Act</div>
+    <div class="spotlight-tag">End of May Deadline · Now or Never Until 2030</div>
+    <p class="spotlight-thesis">100+ crypto firms including Coinbase and Ripple are pressing the Senate Banking Committee for a markup this week. Senator Moreno issued an ultimatum April 22: pass it by end of May or it dies until at least 2030.</p>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>Venus and Uranus both in Gemini, trine Pluto in Aquarius.</strong> Venus rules financial agreements. Uranus rules disruption of old regulatory systems. This is as favorable a sky as this bill has seen.</div></div>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>Tuesday April 28 — Moon trine Uranus at 5:17 AM.</strong> The Moon's first act after entering Libra (law, agreements) is a harmonious trine to Uranus in Gemini. This is the early morning window where a committee markup announcement could land.</div></div>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>The Scorpio Full Moon as forcing function.</strong> If a committee deal is being hammered out in private this week, Friday's full moon may force it into public view. <span class="hi-green">The Full Moon does not let secrets stay secret.</span></div></div>
+    <div class="spotlight-bottom">Polymarket odds: 46% passage in 2026. May 21 Memorial Day recess is the structural kill switch.</div>
+  </div>
+  </div>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #e0d8cc;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#a07830;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #e0d8cc;width:40%;"></td></tr></table>
+  <div class="inner">
+  <div class="section-label">SHA's Lens — The Cosmic Report</div>
+  <div class="lens-box">
+    <p class="lens-text">Family, with Uranus in Gemini along with Venus, anything can happen — and fast. This is the energy of shake up, wake up, and sudden break ups. Uranus is full of surprises and Gemini is full of jokes. That Papa Legba vibe with a twist of Oshun in the mix.</p>
+    <p class="lens-text" style="margin-top:20px;">Whichever way the pendulum swings — just know, it's all part of what's being wiped clean so the new system can begin. And that's transformation.</p>
+    <div class="lens-sig">— Sha Blyss aka MahMah Tea · Watch the skies, and keep your eyes on the prize</div>
+  </div>
+  <div class="final-word">
+    <p>Family, this is not a week to be reactive.</p>
+    <p style="margin-top:12px;">The Moon travels through three signs. Powell speaks his last words as Fed Chair. The CLARITY Act faces its critical window. The Scorpio Full Moon exposes what has been hidden. And Uranus settles into Gemini — beginning a 7-year transformation.</p>
+    <p style="margin-top:12px;">You do not need to catch every move. You need to <span class="hi-green">understand the system that is creating the moves.</span></p>
+    <p style="margin-top:12px;">Watch the skies. Keep your eyes on the prize.<br>The new system is beginning.</p>
+    <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/mas_money.png?v=1774373569" alt="Mah's Money" style="width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid #c9a84c;display:block;margin:28px auto 0;">
+    <div class="sig">Stay In The Black · Mah's Money · The In The Black Newsletter<br>— Sha Blyss aka MahMah Tea</div>
+  </div>
+  <div class="community-hook"><p>Reply and tell me: <strong>What are you watching this week?</strong><br>The Full Moon? Powell's press conference? The CLARITY Act?</p></div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin:40px 0 20px;">
+    <div style="background:#f0f8f0;border:1px solid #3a8a00;border-left:4px solid #3a8a00;border-radius:0 8px 8px 0;padding:24px 26px;">
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.16em;color:#3a8a00;text-transform:uppercase;margin-bottom:14px;">MahMah Tea · Wellness + Copper Jewelry</div>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Sacred Tea · sacredtea.net</div>
+      <div style="font-size:14px;color:#555;margin-bottom:16px;">Wellness blends and copper jewelry crafted with intention.</div>
+      <div style="background:#edf8e0;border:0.5px solid #b8d898;border-radius:8px;padding:14px 18px;margin-bottom:16px;display:inline-block;">
+        <div style="font-size:10px;color:#3a8a00;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;">Your 10% Off Code</div>
+        <div style="font-size:22px;font-weight:700;color:#3a8a00;font-family:'Playfair Display',serif;">INTHEBLACK10</div>
+      </div><br>
+      <a href="https://sacredtea.net/discount/intheblack10" style="display:inline-block;font-size:12px;font-weight:500;color:#3a8a00;text-decoration:none;border:0.5px solid #3a8a00;border-radius:20px;padding:8px 22px;letter-spacing:0.06em;text-transform:uppercase;">Shop Sacred Tea →</a>
+    </div>
+  </div>
+  <div class="disclaimer">I am not a financial advisor. This is not financial advice.<br>This is cosmic intelligence for educational and informational purposes only.<br>Mah's Money · The In The Black Newsletter · Sha Blyss aka MahMah Tea · April 27, 2026</div>
+  </div>
+</div>
+</body>
+</html>
