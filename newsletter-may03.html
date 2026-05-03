@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mah's Money Newsletter — Chapter 4 · The First Surge — May 3, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #080808; color: #f0ede8; font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.75; font-size: 16px; }
+  .back-bar { position: sticky; top: 0; z-index: 100; background: #0a0a0a; border-bottom: 1px solid #c9a84c; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+  .back-btn { font-size: 12px; font-weight: 500; color: #c9a84c; text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; border: 0.5px solid #c9a84c; border-radius: 20px; padding: 6px 16px; cursor: pointer; background: none; }
+  .back-btn:hover { background: #c9a84c; color: #080808; }
+  .back-label { font-size: 11px; color: #555; letter-spacing: 0.08em; text-transform: uppercase; }
+  .page { max-width: 680px; margin: 0 auto; padding: 0 0 60px 0; background: #080808; }
+  .inner { padding: 0 32px; }
+  .hero-image { width: 100%; height: 300px; object-fit: cover; object-position: center top; display: block; filter: brightness(0.82); }
+  .section-image { width: 100%; height: 250px; object-fit: cover; object-position: center 25%; display: block; filter: brightness(0.88); }
+  .masthead { border-top: 1px solid #c9a84c; border-bottom: 1px solid #c9a84c; padding: 22px 32px; margin-bottom: 48px; display: flex; justify-content: space-between; align-items: center; background: #080808; }
+  .masthead-meta { font-size: 11px; font-weight: 400; color: #888; letter-spacing: 0.1em; text-align: right; line-height: 1.9; text-transform: uppercase; }
+  .chapter-banner { background: #0d0c08; border: 0.5px solid #2a2418; border-left: 3px solid #c9a84c; padding: 16px 22px; margin: 0 0 30px 0; border-radius: 0 8px 8px 0; }
+  .chapter-banner .ch-label { font-size: 10px; letter-spacing: 0.22em; color: #c9a84c; text-transform: uppercase; margin-bottom: 4px; }
+  .chapter-banner .ch-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #ffffff; line-height: 1.5; }
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.22em; color: #c9a84c; text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 0.5px; background: #222; }
+  .intro { font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px; color: #ffffff; margin-bottom: 24px; line-height: 1.7; }
+  p { margin-bottom: 14px; color: #d8d4ce; font-size: 16.5px; }
+  .hi-green { color: #aaff44; font-weight: 500; }
+  .hi-red   { color: #ff4444; font-weight: 500; }
+  .hi-gold  { color: #c9a84c; font-weight: 500; }
+  .hi-white { color: #ffffff; font-weight: 500; }
+  .hi-silver { color: #b8c8d8; font-weight: 500; }
+  .callout { border-left: 3px solid #c9a84c; background: #0f0e08; padding: 16px 20px; margin: 22px 0; color: #e8e4de; border-radius: 0 6px 6px 0; font-size: 16px; line-height: 1.7; }
+  .callout-red { border-left: 3px solid #ff4444; background: #140808; padding: 16px 20px; margin: 22px 0; color: #e8e4de; border-radius: 0 6px 6px 0; font-size: 16px; line-height: 1.7; }
+  .callout-green { border-left: 3px solid #aaff44; background: #0a0d08; padding: 16px 20px; margin: 22px 0; color: #e8e4de; border-radius: 0 6px 6px 0; font-size: 16px; line-height: 1.7; }
+  .three-forces { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 24px 0; }
+  .force-card { background: #0f0f0f; border: 0.5px solid #222; border-radius: 8px; padding: 16px 20px; }
+  .force-card .f-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px; }
+  .force-card .f-name { font-family: 'Playfair Display', serif; font-size: 17px; color: #ffffff; margin-bottom: 6px; font-weight: 500; }
+  .force-card .f-body { font-size: 14px; color: #a8a49e; line-height: 1.7; }
+  .moon-gate { background: #0d0c08; border: 0.5px solid #2a2418; border-left: 3px solid #c9a84c; border-radius: 0 8px 8px 0; padding: 26px 28px; margin: 28px 0; }
+  .moon-gate-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #c9a84c; margin-bottom: 22px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .moon-day { display: grid; grid-template-columns: 38px 110px 1fr; gap: 8px 14px; margin-bottom: 16px; font-size: 14px; align-items: start; border-bottom: 0.5px solid #1a1812; padding-bottom: 14px; }
+  .moon-day:last-child { border-bottom: none; padding-bottom: 0; }
+  .moon-icon { padding-top: 2px; font-size: 22px; line-height: 1.2; }
+  .moon-date { color: #b8c8d8; font-weight: 500; padding-top: 4px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.6; }
+  .moon-desc { color: #c8c4be; line-height: 1.65; font-size: 14.5px; }
+  .moon-desc strong { color: #ffffff; font-weight: 500; }
+  .moon-peak { margin-top: 18px; padding: 14px 16px; background: #1a0808; border: 0.5px solid #4a1a1a; border-left: 3px solid #ff4444; border-radius: 0 6px 6px 0; font-size: 14px; color: #ff4444; line-height: 1.7; font-weight: 500; }
+  .moon-foot { margin-top: 16px; font-size: 11px; color: #555; font-style: italic; line-height: 1.7; }
+  .market-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
+  .market-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .market-card { background: #0f0f0f; border: 0.5px solid #222; border-radius: 8px; padding: 14px 16px; }
+  .market-ticker { font-size: 10px; font-weight: 500; color: #c9a84c; letter-spacing: 0.14em; margin-bottom: 5px; text-transform: uppercase; }
+  .market-price { font-size: 19px; font-weight: 700; color: #ffffff; font-family: 'Playfair Display', serif; margin-bottom: 5px; }
+  .market-sub-green { font-size: 10px; color: #aaff44; margin-bottom: 4px; }
+  .market-sub-red { font-size: 10px; color: #ff4444; margin-bottom: 4px; }
+  .market-note { font-size: 11px; color: #888; line-height: 1.5; }
+  .move-box { background: #0a0d08; border: 0.5px solid #1a2212; border-left: 3px solid #aaff44; border-radius: 0 8px 8px 0; padding: 24px 28px; margin: 28px 0; }
+  .move-asset { font-size: 22px; font-weight: 700; font-family: 'Playfair Display', serif; color: #ffffff; margin-bottom: 4px; }
+  .move-level { font-size: 12px; color: #aaff44; letter-spacing: 0.1em; margin-bottom: 16px; font-weight: 500; text-transform: uppercase; }
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .scenario { padding: 14px 16px; border-radius: 6px; font-size: 13px; line-height: 1.65; }
+  .scenario-bull { background: #081408; border: 0.5px solid #1a3a1a; }
+  .scenario-bull .scenario-label { color: #aaff44; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px; }
+  .scenario-bear { background: #140808; border: 0.5px solid #3a1a1a; }
+  .scenario-bear .scenario-label { color: #ff4444; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px; }
+  .scenario p { color: #c8c4be; font-size: 13px; margin: 0; }
+  .spotlight { background: #0a0a12; border: 0.5px solid #1a1a2a; border-left: 3px solid #b8c8d8; border-radius: 0 8px 8px 0; padding: 28px; margin: 20px 0; }
+  .spotlight-name { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+  .spotlight-tag { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; color: #b8c8d8; background: #12121e; border: 0.5px solid #2a2a40; border-radius: 20px; padding: 5px 14px; display: inline-block; margin-bottom: 16px; text-transform: uppercase; }
+  .spotlight-thesis { font-size: 15px; color: #a8a49e; line-height: 1.75; margin-bottom: 18px; }
+  .spotlight-point { padding: 12px 0; border-bottom: 0.5px solid #1a1a2a; font-size: 14px; color: #c8c4be; display: flex; gap: 14px; align-items: flex-start; line-height: 1.65; }
+  .spotlight-point:last-child { border-bottom: none; }
+  .spotlight-point .dot { color: #b8c8d8; flex-shrink: 0; font-size: 20px; line-height: 1.3; }
+  .spotlight-point strong { color: #ffffff; font-weight: 500; }
+  .spotlight-bottom { margin-top: 16px; padding-top: 14px; border-top: 0.5px solid #1a1a2a; font-size: 13px; color: #888; font-style: italic; }
+  .glossary { margin: 18px 0; }
+  .glossary-item { padding: 12px 0; border-bottom: 0.5px solid #181818; display: grid; grid-template-columns: 145px 1fr; gap: 16px; font-size: 14px; align-items: start; }
+  .glossary-term { color: #c9a84c; font-weight: 500; }
+  .glossary-def { color: #888; line-height: 1.6; }
+  .lens-box { border-top: 0.5px solid #2a2418; border-bottom: 0.5px solid #2a2418; padding: 30px 0; margin: 30px 0; }
+  .lens-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #e0dcd6; line-height: 1.95; }
+  .lens-sig { margin-top: 20px; font-size: 12px; color: #c9a84c; letter-spacing: 0.07em; }
+  .next-chapter { background: #0a0d08; border: 0.5px solid #1a2212; border-left: 3px solid #aaff44; border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 24px 0; }
+  .next-chapter .nc-label { font-size: 10px; letter-spacing: 0.22em; color: #aaff44; text-transform: uppercase; margin-bottom: 6px; }
+  .next-chapter .nc-body { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: #d8d4ce; line-height: 1.7; }
+  .final-word { text-align: center; padding: 44px 0; }
+  .final-word p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: #e0dcd6; line-height: 1.95; text-align: center; }
+  .final-word .sig { margin-top: 22px; font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 11px; font-weight: 500; color: #c9a84c; letter-spacing: 0.14em; text-transform: uppercase; }
+  .community-hook { text-align: center; padding: 24px 28px; background: #0d0c08; border: 0.5px solid #2a2418; border-radius: 8px; margin: 32px 0; }
+  .community-hook p { font-size: 14px; color: #888; text-align: center; line-height: 1.7; }
+  .community-hook strong { color: #aaff44; font-weight: 500; }
+  .aff-featured { background: #0a0d08; border: 1px solid #aaff44; border-left: 4px solid #aaff44; border-radius: 0 8px 8px 0; padding: 24px 26px; }
+  .aff-gold { background: #0d0c08; border: 0.5px solid #2a2418; border-left: 3px solid #c9a84c; border-radius: 0 8px 8px 0; padding: 22px 24px; }
+  .aff-navy { background: #080a12; border: 0.5px solid #1a1e2a; border-left: 3px solid #b8c8d8; border-radius: 0 8px 8px 0; padding: 22px 24px; }
+  .aff-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; color: #555; text-transform: uppercase; margin-bottom: 12px; }
+  .aff-featured-label { font-size: 10px; font-weight: 500; letter-spacing: 0.16em; color: #aaff44; text-transform: uppercase; margin-bottom: 14px; }
+  .aff-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+  .aff-desc { font-size: 14px; color: #888; line-height: 1.65; margin-bottom: 14px; }
+  .aff-note { margin-top: 10px; font-size: 11px; color: #333; font-style: italic; }
+  .code-box { background: #0f1a0a; border: 0.5px solid #2a4a1a; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; display: inline-block; }
+  .code-label { font-size: 10px; color: #aaff44; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px; }
+  .code-val { font-size: 22px; font-weight: 700; color: #aaff44; font-family: 'Playfair Display', serif; letter-spacing: 0.08em; }
+  .btn-gold { display: inline-block; font-size: 12px; font-weight: 500; color: #c9a84c; text-decoration: none; border: 0.5px solid #c9a84c; border-radius: 20px; padding: 7px 20px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .btn-green { display: inline-block; font-size: 12px; font-weight: 500; color: #aaff44; text-decoration: none; border: 0.5px solid #aaff44; border-radius: 20px; padding: 8px 22px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .btn-silver { display: inline-block; font-size: 12px; font-weight: 500; color: #b8c8d8; text-decoration: none; border: 0.5px solid #b8c8d8; border-radius: 20px; padding: 7px 20px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .bullet-list { list-style: none; margin: 14px 0 22px; }
+  .bullet-list li { padding: 9px 0 9px 22px; position: relative; color: #d0ccc6; font-size: 15.5px; border-bottom: 0.5px solid #181818; line-height: 1.65; }
+  .bullet-list li::before { content: '›'; position: absolute; left: 0; color: #c9a84c; font-size: 20px; line-height: 1.4; }
+  .disclaimer { font-size: 11px; color: #333; text-align: center; line-height: 1.9; padding-top: 22px; border-top: 0.5px solid #181818; }
+  @media(max-width:600px){ .market-3{grid-template-columns:1fr 1fr;} .glossary-item{grid-template-columns:1fr;} .moon-day{grid-template-columns:38px 1fr;grid-template-rows:auto auto;} .moon-icon{grid-column:1;grid-row:1/span 2;} .moon-date{grid-column:2;grid-row:1;} .moon-desc{grid-column:2;grid-row:2;margin-top:4px;} }
+</style>
+</head>
+<body>
+
+<div class="back-bar">
+  <button class="back-btn" onclick="window.history.back()">← Back to Vault</button>
+  <span class="back-label">Ma's Money · The In The Black Newsletter</span>
+</div>
+
+<div class="page">
+  <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_Ultra-realistic_cinematic_photograph_of_dark_skinn_0333d464-cbed-45cc-a944-260a402b906d_1.png?v=1777217098" class="hero-image" alt="Mah's Money">
+
+  <div class="masthead">
+    <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_create_a_corporate_logo_with_the_name_in_big_bold__f6f4f19f-f24b-4d29-9be3-fe8ec9ca39e5_3.png?v=1773250897" alt="Mah's Money Newsletter" style="height:64px;width:auto;display:block;object-fit:contain;">
+    <div class="masthead-meta">Chapter 4 · The First Surge<br>Sunday · May 3, 2026</div>
+  </div>
+
+  <div class="inner">
+  <div class="chapter-banner">
+    <div class="ch-label">Where We Left Off</div>
+    <div class="ch-title">Two weeks ago Uranus walked into Gemini and rewired how money moves. Last week Pluto looked at what was being built and started backing up to take a closer look. <span class="hi-gold">This week the first current runs through the new system — and you can already see who's surviving and who's not.</span></div>
+  </div>
+
+  <div class="section-label">The Sky Before The Story</div>
+  <p class="intro">Family… this week the sky gets quiet. And when the sky gets quiet, that's when you listen the hardest.</p>
+  <p>There's no dramatic six-planet shouting match in the sky this week. What we have is <span class="hi-white">two pressure points and a Pluto that has stopped moving entirely.</span> That's the story. Not the noise. The stillness.</p>
+  <p>Stillness in a powerful planet is not peace. It's pressure. Pluto is the Lord of the Underworld — when it stations, it presses its full weight into the ground for 162 days of internal audit. <span class="hi-gold">What was holding power together begins to show its seams.</span></p>
+  <p>Three forces define this week. Translated:</p>
+
+  <div class="three-forces">
+    <div class="force-card">
+      <div class="f-label" style="color:#ff4444;">★ Mars Squares Jupiter — Monday Night</div>
+      <div class="f-name">The War's Cost Meets the Family Budget</div>
+      <div class="f-body">Mars in Aries (war, fuel, aggression) crashing into Jupiter in Cancer (the household, the family, what feeds us). The price of conflict lands on the kitchen table this week. <span class="hi-red">Spirit Airlines was the first body. There will be more.</span></div>
+    </div>
+    <div class="force-card">
+      <div class="f-label" style="color:#c9a84c;">★ Mercury Squares Pluto — Wednesday</div>
+      <div class="f-name">What Got Negotiated Meets What Gets Enforced</div>
+      <div class="f-body">Mercury rules the words in the law, the wires in the system, the language of money. Pluto rules the throne behind it. When they grind against each other, every contract written last week comes back to ask: <span class="hi-gold">do you really mean it?</span></div>
+    </div>
+    <div class="force-card">
+      <div class="f-label" style="color:#b8c8d8;">★ Pluto Stations Retrograde — Wednesday</div>
+      <div class="f-name">The Audit Begins</div>
+      <div class="f-body">For 162 days, what's been built on hidden leverage gets a flashlight in its face. AI debt. Government deals. Banking promises. <span class="hi-silver">What was built right survives. What was built on smoke gets exposed.</span></div>
+    </div>
+  </div>
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #2a2418;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#c9a84c;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #2a2418;width:40%;"></td></tr></table>
+
+  <div class="inner">
+  <div class="section-label">Moon Gate · One Energy Per Day</div>
+  <p>The Moon walks through Sagittarius, Capricorn, Aquarius this week. Each shift resets what kind of energy is actually available to you.</p>
+  <div class="moon-gate">
+    <div class="moon-gate-title">⊙ May 3 – 9 · The Lunar Roadmap</div>
+    <div class="moon-day"><div class="moon-icon">🌔</div><div class="moon-date">SUN 5/3<br>Integration</div><div class="moon-desc"><strong>Carry last week's Full Moon revelation forward.</strong> The truth that surfaced gets structured today. Don't react — integrate.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌔</div><div class="moon-date">MON 5/4<br>Morning = Clarity</div><div class="moon-desc"><strong>Close decisions before 5 PM.</strong> Mars-Jupiter fires hot tonight. The morning is your clean window. The evening is high-energy turbulence — sleep on anything you'd otherwise sign in haste.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌗</div><div class="moon-date">TUE 5/5<br>Walls Show Up</div><div class="moon-desc"><strong>Financial agreements hit structural walls.</strong> Read everything twice. Don't sign without sleeping on it.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌗</div><div class="moon-date">WED 5/6<br>PRESSURE PEAK</div><div class="moon-desc"><strong>Pluto stations. Mercury slams Pluto.</strong> The most charged day of the week. <span class="hi-red">Read everything twice. Decide nothing fast.</span></div></div>
+    <div class="moon-day"><div class="moon-icon">🌘</div><div class="moon-date">THU 5/7<br>Window Closes 10 AM</div><div class="moon-desc"><strong>Get business done before 10 AM.</strong> After that the energy diffuses. Use the morning. Coast the afternoon.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌘</div><div class="moon-date">FRI 5/8<br>Relief Window</div><div class="moon-desc"><strong>The week's most favorable close.</strong> Moon trine Saturn at sunrise. Moon meets Venus mid-afternoon. If there's a relief rally, this is the day.</div></div>
+    <div class="moon-day"><div class="moon-icon">🌑</div><div class="moon-date">SAT 5/9<br>4th Quarter Reckoning</div><div class="moon-desc"><strong>The week's lesson lands.</strong> Aquarius Moon vs. Taurus Sun = the values of the many vs. the wealth of the few. Saturday sets next week's theme.</div></div>
+    <div class="moon-peak">⚡ The pressure peak is <span class="hi-white">Wednesday May 6.</span> Everything before is building toward it. Everything after is processing it.</div>
+    <div class="moon-foot">For the geeks: full aspect data with exact times available on request.</div>
+  </div>
+  </div>
+
+  <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_Ultra-realistic_cinematic_photograph_of_dark_skinn_0333d464-cbed-45cc-a944-260a402b906d_2.png?v=1777217098" class="section-image" alt="Mah's Money">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #2a2418;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#c9a84c;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #2a2418;width:40%;"></td></tr></table>
+
+  <div class="inner">
+  <div class="section-label">The World — Spirit Airlines Falls First</div>
+  <div class="callout-red">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#ffffff;margin-bottom:10px;line-height:1.3;">Spirit Airlines Shut Down at 3 AM Saturday.<br>17,000 Jobs Gone Overnight.</div>
+    <p style="margin-bottom:10px;color:#e8e4de;">The first major US airline collapse in 25 years. Passengers woke up to dark terminals and canceled flights. Millions of families holding future tickets are scrambling.</p>
+    <p style="margin-bottom:0;color:#e8e4de;"><span class="hi-red">What killed Spirit?</span> Soaring jet fuel from the Iran war — Mars-ruled cost squeezing every consumer business. A $500M government bailout fell apart.</p>
+  </div>
+  <p><span class="hi-gold">Read it cosmically:</span> Mars in Aries (war, fuel) crushing Jupiter in Cancer (the domestic consumer, the budget traveler, the family flying home). Spirit was built on the working family demographic. When Mars made fuel too expensive, the model collapsed.</p>
+  <p><span class="hi-white">Mars in Aries doesn't ease until Mars leaves Aries — mid-May.</span> Until then, every business built on the working family's discretionary spend is under pressure.</p>
+  <ul class="bullet-list">
+    <li><span class="hi-gold">CLARITY Act compromise hit the wire on Friday's Full Moon</span> — hidden negotiations made public. Wednesday's Mercury-Pluto square is when that language meets enforcement reality.</li>
+    <li><span class="hi-red">Operation Economic Fury</span> — US Treasury seized $344 million in Iran-linked crypto. More coming this week.</li>
+    <li><span class="hi-red">Iran's Strait of Hormuz position hardened.</span> Crude back above $101. Mars-Jupiter says the aggression is overextended — something has to give.</li>
+    <li><span class="hi-silver">Kevin Warsh's Senate confirmation vote</span> penciled for the week of May 11. New Fed Chair entering as Pluto stations = the monetary power structure enters internal review.</li>
+  </ul>
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #2a2418;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#c9a84c;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #2a2418;width:40%;"></td></tr></table>
+
+  <div class="inner">
+  <div class="section-label">How This Hits The Markets · The Six That Tell The Story</div>
+  <div class="market-3">
+    <div class="market-card"><div class="market-ticker">Spirit · SAVE</div><div class="market-price">$0.00</div><div class="market-sub-red">↓ Halted · The Casualty</div><div class="market-note">The first airline to fall in 25 years. Watch the redistribution to UAL, DAL, LUV, JBLU.</div></div>
+    <div class="market-card"><div class="market-ticker">Texas Instruments · TXN</div><div class="market-price">+18%</div><div class="market-sub-green">↑ Best Month in 25 Years</div><div class="market-note">Analog chips powering AI data centers. Mercury in Taurus rewards what's physical and real.</div></div>
+    <div class="market-card"><div class="market-ticker">Crude Oil · WTI</div><div class="market-price">$101.94</div><div class="market-sub-red">↑ Above $100 · The Trigger</div><div class="market-note">Hormuz reopens = drop to $80s. Escalation = $110+. Everything follows.</div></div>
+  </div>
+  <div class="market-3">
+    <div class="market-card"><div class="market-ticker">Gold · COMEX</div><div class="market-price">~$4,620</div><div class="market-sub-red">↓ Off highs</div><div class="market-note">Support $4,600. Pluto retrograde = hidden hand in the gold narrative. Each dip remains bought.</div></div>
+    <div class="market-card"><div class="market-ticker">Bitcoin · BTC</div><div class="market-price">$78,428</div><div class="market-sub-green">↑ from last issue</div><div class="market-note">$80K ceiling = the wall. Warsh tone before June Fed = what breaks it.</div></div>
+    <div class="market-card"><div class="market-ticker">McDonald's · MCD</div><div class="market-price">↓ -2.4%</div><div class="market-sub-red">The Canary</div><div class="market-note">If MCD bleeds, the working family is bleeding. Watch.</div></div>
+  </div>
+  <div class="callout"><span class="hi-white">The pattern:</span> the household wallet is bleeding (Spirit, MCD). The infrastructure layer is holding (TXN, analog chips). <span class="hi-gold">Mercury in Taurus rewards what physically works. Mars in Aries punishes what depends on the family wallet.</span> Until Mars leaves Aries mid-May, that split is the entire story.</div>
+  </div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #2a2418;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#c9a84c;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #2a2418;width:40%;"></td></tr></table>
+
+  <div class="inner">
+  <div class="section-label">Asset Spotlight · The Sleeping Stack</div>
+  <div class="spotlight">
+    <div class="spotlight-name">The AI Infrastructure Stack</div>
+    <div class="spotlight-tag">Mercury in Taurus · What Actually Builds the Machine</div>
+    <p class="spotlight-thesis">Everyone is watching Nvidia. The companies that actually build the physical infrastructure AI runs on — power, cooling, analog chips — have been quietly outperforming. Mercury in Taurus rewards the practical, the physical, the unglamorous.</p>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>Texas Instruments (TXN) — The Power Manager.</strong> Analog chips manage power and signals inside every AI data center. Best month in 25 years in April. <span class="hi-green">This is what Mercury in Taurus looks like in a ticker.</span></div></div>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>Vertiv (VRT) — The Cooling System.</strong> AI chips generate massive heat. Vertiv makes the thermal management. No cooling = no AI. The unsexy truth behind every ChatGPT query.</div></div>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>Eaton (ETN) — The Power Grid.</strong> AI data centers consume extraordinary electricity. Every new AI data center is a new Eaton customer.</div></div>
+    <div class="spotlight-point"><span class="dot">›</span><div><strong>The Cosmic Map.</strong> Mercury in Taurus says the value is in the physical layer. <span class="hi-gold">The companies building the foundation are more defensible than the companies building on top of it.</span></div></div>
+    <div class="spotlight-bottom">Next week's spotlight: The Warsh Effect — how a new Fed Chair changes the monetary frequency, and what assets respond first.</div>
+  </div>
+  </div>
+
+  <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_Ultra-realistic_cinematic_photograph_of_Afro-Indig_c26cf9c6-1d4a-471b-8536-0133a8d30c58_0.png?v=1777216180" class="section-image" alt="Mah's Money">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:36px 0;"><tr><td style="border-top:1px solid #2a2418;width:40%;"></td><td style="padding:0 14px;white-space:nowrap;color:#c9a84c;font-size:15px;font-family:serif;text-align:center;"> ✦ </td><td style="border-top:1px solid #2a2418;width:40%;"></td></tr></table>
+
+  <div class="inner">
+  <div class="section-label">SHA's Lens · From the Ancestor Frequency</div>
+  <div class="lens-box">
+    <p class="lens-text">Family. There's a kind of quiet that isn't peace. Your grandmother knew it. The room goes still right before someone walks in. The drum stops right before the elder speaks. The wind dies right before the storm arrives. <span class="hi-gold">That's the sky this week.</span></p>
+    <p class="lens-text" style="margin-top:20px;">Pluto stationed retrograde Wednesday. Stationing means the planet stops moving so it can press its full weight into the ground. The frequency drops. And every system that's been running on noise gets exposed in the silence.</p>
+    <p class="lens-text" style="margin-top:20px;"><span class="hi-red">Spirit Airlines was the first body. There will be more before Mars leaves Aries.</span> The cosmic medicine isn't to panic. Pluto retrograde isn't punishment — it's audit. What survives an audit is what was built right. What dies in an audit is what was built on smoke.</p>
+    <p class="lens-text" style="margin-top:20px;">Family — this is the season of seeing what's actually yours. <span class="hi-green">The frequency this week says: stack what's real, watch what falls, and trust what your grandmother already knew.</span></p>
+    <div class="lens-sig">— Sha Blyss aka MahMah Tea · The Sky Got Quiet So You Could Hear The Truth</div>
+  </div>
+
+  <div class="section-label">In The Know · Build Your Game</div>
+  <div class="glossary">
+    <div class="glossary-item"><div class="glossary-term">Stationary Retrograde</div><div class="glossary-def">When a planet appears to stop before reversing direction. The energy at maximum concentration — like a thumb pressed hard into clay. Pluto stationing this week is Pluto at its loudest, even though it sounds quiet.</div></div>
+    <div class="glossary-item"><div class="glossary-term">Picks-and-Shovels</div><div class="glossary-def">In a gold rush, the people who made money weren't the miners — they sold picks, shovels, and jeans. TXN, Vertiv, Eaton sell the picks and shovels of the AI gold rush.</div></div>
+    <div class="glossary-item"><div class="glossary-term">Debt-to-Equity Ratio</div><div class="glossary-def">How much a company owes vs. what it's worth. Under Pluto retrograde, that kind of leverage gets a flashlight in its face. Know the debt load of anything you hold.</div></div>
+  </div>
+
+  <div class="next-chapter">
+    <div class="nc-label">Next Chapter · May 10</div>
+    <div class="nc-body">Warsh confirmation lands. Mars finally exits Aries. The household wallet gets its first breath since April. <span class="hi-green">The Warsh Effect — how a new Fed Chair changes the monetary frequency.</span> The chapter changes.</div>
+  </div>
+
+  <div class="final-word">
+    <p>Family. The sky got quiet so you could hear what's actually true.</p>
+    <p style="margin-top:14px;">Stack what's real. Watch what falls. <span class="hi-green">Trust what your grandmother already knew.</span></p>
+    <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/masmoney.png?v=1774373569" alt="Mah's Money" style="width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid #c9a84c;display:block;margin:28px auto 0;filter:brightness(0.9);">
+    <div class="sig">Stay In The Black · Mah's Money Newsletter<br>— Sha Blyss aka MahMah Tea</div>
+  </div>
+
+  <div class="community-hook">
+    <p>Reply and tell me: <strong>What just got quiet in your life that's actually pressure?</strong><br>What system are you about to audit? What's been built on smoke?</p>
+  </div>
+
+  <div class="section-label" style="margin-top:40px;">Community Resources · How to Stack</div>
+  <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:40px;">
+    <div class="aff-featured">
+      <div class="aff-featured-label">MahMah Tea · Wellness + Copper Jewelry</div>
+      <div style="display:flex;align-items:flex-start;gap:14px;"><div style="font-size:26px;line-height:1;">🍃</div><div>
+        <div class="aff-name">Sacred Tea · sacredtea.net</div>
+        <div class="aff-desc">Mercury in Taurus week — ground your frequency in something physical and real.</div>
+        <div class="code-box"><div class="code-label">Your 10% Off Code</div><div class="code-val">INTHEBLACK10</div></div><br>
+        <a href="https://sacredtea.net/discount/intheblack10" class="btn-green">Shop Sacred Tea →</a>
+      </div></div>
+    </div>
+    <div class="aff-gold"><div class="aff-label">Affiliate · USA &amp; International</div><div style="display:flex;align-items:flex-start;gap:14px;"><div style="font-size:24px;line-height:1;">🥈</div><div><div class="aff-name">At-Cost Metals</div><div class="aff-desc">Silver at $75 support — held every dip in April. Stack what you can hold.</div><a href="#" class="btn-gold">Start Stacking →</a><div class="aff-note">♄ Affiliate link — supports this community at no cost to you</div></div></div></div>
+    <div class="aff-gold"><div class="aff-label">Affiliate · International</div><div style="display:flex;align-items:flex-start;gap:14px;"><div style="font-size:24px;line-height:1;">⚡</div><div><div class="aff-name">QuickSilver Global Network</div><div class="aff-desc">Outside the USA? Your stacking entry point.</div><a href="#" class="btn-gold">Join QuickSilver →</a><div class="aff-note">♄ Affiliate link — supports this community at no cost to you</div></div></div></div>
+    <div class="aff-navy"><div class="aff-label">Affiliate · Free Bitcoin Included</div><div style="display:flex;align-items:flex-start;gap:14px;"><div style="font-size:24px;line-height:1;">🔐</div><div><div class="aff-name">Ledger Cold Wallet · Self-Custody Is The Sovereign Move</div><div class="aff-desc">Operation Economic Fury just seized $344M in crypto. If your crypto lives on an exchange, you own an IOU. Hold your own keys.</div><a href="#" class="btn-silver">Get Your Ledger + Free BTC →</a><div class="aff-note">♄ Affiliate link — supports this community at no cost to you</div></div></div></div>
+  </div>
+
+  <img src="https://cdn.shopify.com/s/files/1/0822/8713/2951/files/shablyss77_Cinematic_ultra-realistic_scene_of_Afro-Indigenous_64702141-a0b0-4134-9c13-26fb59784110_0.png?v=1777216180" style="width:100%;height:200px;object-fit:cover;object-position:center 20%;border-radius:8px;display:block;margin-bottom:28px;filter:brightness(0.85);" alt="In The Black Community">
+
+  <div class="disclaimer">
+    I am not a financial advisor. This is not financial advice.<br>
+    This is cosmic intelligence for educational and informational purposes only.<br>
+    Always do your own research and move responsibly.<br><br>
+    Mah's Money Newsletter · Sha Blyss aka MahMah Tea · May 3, 2026<br>
+    Chapter 4 · The First Surge
+  </div>
+  </div>
+</div>
+</body>
+</html>
