@@ -1480,17 +1480,28 @@ function renderPlaylistTab(){
   count.textContent=userPlaylist.length+' track'+(userPlaylist.length===1?'':'s')+' saved';
 
   grid.innerHTML=userPlaylist.map((p,i)=>{
-    // Find cover art for this track
-    const contentItem = CONTENT.find(c => c.id === p.content_id);
-    const thumb = contentItem?.coverImg || DEFAULT_COVER;
+    // Find cover art — check all arrays
+    const isVideo = p.track_url && p.track_url.startsWith('musicvideo:');
+    let thumb = DEFAULT_COVER;
+    let typeLabel = '';
+    if(isVideo){
+      // Extract YouTube ID and use thumbnail
+      const ytId = p.track_url.replace('musicvideo:','');
+      thumb = 'https://img.youtube.com/vi/'+ytId+'/hqdefault.jpg';
+      typeLabel = '<span style="font-size:.65rem;color:#c9a84c;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:10px;padding:2px 7px;margin-left:6px;">🎬 Video</span>';
+    } else {
+      const contentItem = CONTENT.find(c => c.id === p.content_id)
+        || MUSIC_VIDEOS.find(c => c.id === p.content_id);
+      thumb = contentItem?.coverImg || DEFAULT_COVER;
+    }
     return `
     <div class="playlist-row">
       <div class="pl-num">${i+1}</div>
       <img class="pl-thumb" src="${thumb}" alt="cover"/>
       <div style="flex:1;min-width:0;">
-        <div class="pl-title">${p.track_title||'Unknown Track'}</div>
+        <div class="pl-title">${p.track_title||'Unknown Track'}${typeLabel}</div>
       </div>
-      <button class="pl-play" onclick="playPlaylistTrack(${i})" title="Play">▶</button>
+      <button class="pl-play" onclick="playPlaylistTrack(${i})" title="Play">${isVideo?'▶ Watch':'▶'}</button>
       <button class="pl-remove" onclick="removeFromPlaylist(${i})" title="Remove">✕</button>
     </div>`;
   }).join('');
@@ -1502,20 +1513,28 @@ function playPlaylistTrack(idx){
 
   currentAlbum={id:-1,title:'My Playlist',emoji:'♡',color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',tracks:userPlaylist.map(p=>p.track_title),trackUrls:userPlaylist.map(p=>p.track_url)};
   currentTrackIdx=idx;
+  currentPlayingTrackIdx=idx;
 
-  // ── Check if this is a music video track ──
-  if(track.track_url && track.track_url.startsWith('musicvideo:')){
-    const ytId = track.track_url.replace('musicvideo:','');
-    // Find the video in any array
-    const v = MUSIC_VIDEOS.find(x=>x.youtubeId===ytId)
-           || VIDEOS.find(x=>x.youtubeId===ytId)
-           || PATREON_VIDEOS.find(x=>x.youtubeId===ytId)
-           || TIKTOK_VIDEOS.find(x=>x.youtubeId===ytId);
-    if(v){
-      openVideo(v.id);
-      currentPlayingTrackIdx=idx;
-      return;
-    }
+  // ── Video track — open YouTube player directly ──
+  const url = track.track_url || '';
+  if(url.startsWith('musicvideo:')){
+    const ytId = url.replace('musicvideo:','');
+    // Build a temporary video object and open directly
+    const tempV = MUSIC_VIDEOS.find(x=>x.youtubeId===ytId)
+               || VIDEOS.find(x=>x.youtubeId===ytId)
+               || PATREON_VIDEOS.find(x=>x.youtubeId===ytId)
+               || TIKTOK_VIDEOS.find(x=>x.youtubeId===ytId)
+               || {id:9999, title:track.track_title, youtubeId:ytId, desc:'', episode:'My Playlist'};
+    // Open video modal directly
+    resetModal();
+    document.getElementById('modal-title').textContent = tempV.title || track.track_title;
+    document.getElementById('modal-sub').textContent = 'My Playlist · Video '+(idx+1)+' of '+userPlaylist.length;
+    document.getElementById('video-view').style.display = 'flex';
+    document.getElementById('video-title').textContent = tempV.title || track.track_title;
+    document.getElementById('video-desc').textContent = tempV.desc || '';
+    document.getElementById('video-frame').src = 'https://www.youtube.com/embed/'+ytId+'?rel=0&autoplay=1';
+    showModal();
+    return;
   }
 
   // ── Audio track ──
