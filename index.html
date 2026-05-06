@@ -88,10 +88,27 @@ body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-h
 .library-greeting h1 em{color:var(--gold-light);font-style:italic;}
 .library-greeting p{font-size:.86rem;color:var(--text-dim);}
 
-/* ── TABS ── */
-.tab-row{display:flex;gap:4px;margin-bottom:28px;background:var(--card);border-radius:12px;padding:4px;width:fit-content;border:1px solid var(--border);flex-wrap:wrap;}
-.tab-btn{padding:8px 18px;border-radius:9px;border:none;background:transparent;color:var(--text-dim);font-family:var(--font-body);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.tab-btn.active{background:var(--surface);color:var(--gold);border:1px solid var(--border-bright);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+/* ── HOME BUTTON ── */
+.header-home-btn{background:transparent;border:1px solid rgba(201,168,76,.35);border-radius:8px;color:var(--text);font-family:var(--font-head);font-size:1.22rem;font-weight:300;letter-spacing:.06em;cursor:pointer;padding:6px 14px;transition:all .2s;text-decoration:none;}
+.header-home-btn span{color:var(--gold-light);font-style:italic;}
+.header-home-btn:hover{border-color:var(--gold);color:var(--gold-light);box-shadow:0 0 12px rgba(201,168,76,.2);}
+
+/* ── GROUPED NAV ── */
+.vault-nav{display:flex;align-items:flex-start;gap:6px;margin-bottom:32px;flex-wrap:wrap;padding:14px 16px;background:var(--card);border-radius:14px;border:1px solid var(--border);}
+.nav-group{display:flex;flex-direction:column;gap:6px;}
+.nav-group-label{font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);opacity:.6;padding:0 6px;}
+.nav-group-btns{display:flex;gap:4px;flex-wrap:wrap;}
+.nav-divider{width:1px;background:var(--border);margin:0 6px;align-self:stretch;opacity:.5;}
+.tab-btn{padding:7px 14px;border-radius:8px;border:none;background:transparent;color:var(--text-dim);font-family:var(--font-body);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tab-btn.active{background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.08));color:var(--gold);border:1px solid rgba(201,168,76,.35);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.tab-btn:hover:not(.active){background:rgba(255,255,255,.05);color:var(--text);}
+
+@media(max-width:680px){
+  .vault-nav{gap:4px;padding:10px 12px;}
+  .nav-divider{display:none;}
+  .nav-group{flex-direction:row;align-items:center;gap:4px;}
+  .nav-group-label{display:none;}
+}
 
 /* ── FILTER ── */
 .filter-row{display:flex;gap:8px;margin-bottom:26px;flex-wrap:wrap;}
@@ -259,7 +276,7 @@ audio{display:none;}
   .audio-art{width:130px;height:130px;font-size:3.2rem;}
   .login-box{padding:38px 22px 34px;}
   .tab-row{gap:2px;}
-  .tab-btn{padding:7px 12px;font-size:.76rem;}
+  /* tab-btn mobile handled in vault-nav */
 }
 
 /* ── MINIMIZED PLAYER ── */
@@ -334,7 +351,7 @@ audio{display:none;}
 </div>
 <div id="app" style="display:none">
   <header class="header">
-    <div class="header-logo">Sacred <span>Vault</span></div>
+    <button class="header-home-btn" onclick="goHome()" title="Return to Home">Sacred <span>Vault</span></button>
     <div class="header-right">
       <div class="sub-badge" id="sub-badge"><div class="sub-dot"></div><span id="sub-badge-text">—</span></div>
       <div class="avatar" id="user-avatar">?</div>
@@ -356,15 +373,38 @@ audio{display:none;}
       <p id="greeting-sub">Your full library is open. Stream everything. Buy what you love to keep.</p>
     </div>
 
-    <div class="tab-row">
-      <button class="tab-btn active" id="tab-stream" onclick="switchTab('stream')">✦ Stream Library</button>
-      <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')">📺 Stella Maris TV</button>
-      <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">📂 The Akashic Files</button>
-      <button class="tab-btn" id="tab-tiktok" onclick="switchTab('tiktok')">📱 MahMah Tea's Videos</button>
-      <button class="tab-btn" id="tab-musicvideos" onclick="switchTab('musicvideos')">🎬 Music Videos</button>
-      <button class="tab-btn" id="tab-newsletter" onclick="switchTab('newsletter')">📰 Ma's Money</button>
-      <button class="tab-btn" id="tab-playlist" onclick="switchTab('playlist')">♡ My Playlist</button>
-    </div>
+    <nav class="vault-nav">
+      <div class="nav-group">
+        <div class="nav-group-label">Music</div>
+        <div class="nav-group-btns">
+          <button class="tab-btn active" id="tab-stream" onclick="switchTab('stream')">✦ Library</button>
+          <button class="tab-btn" id="tab-musicvideos" onclick="switchTab('musicvideos')">🎬 Videos</button>
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-group">
+        <div class="nav-group-label">MahMah Tea</div>
+        <div class="nav-group-btns">
+          <button class="tab-btn" id="tab-tiktok" onclick="switchTab('tiktok')">📱 Videos</button>
+          <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')">🌊 Stella Maris</button>
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-group">
+        <div class="nav-group-label">Wisdom</div>
+        <div class="nav-group-btns">
+          <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">📂 Akashic Files</button>
+          <button class="tab-btn" id="tab-newsletter" onclick="switchTab('newsletter')">📰 Ma's Money</button>
+        </div>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-group">
+        <div class="nav-group-label">Yours</div>
+        <div class="nav-group-btns">
+          <button class="tab-btn" id="tab-playlist" onclick="switchTab('playlist')">♡ Playlist</button>
+        </div>
+      </div>
+    </nav>
 
     <!-- Stream tab -->
     <div id="tab-stream-content">
@@ -853,105 +893,105 @@ const VIDEOS = [
   { id:101, type:'video', title:"The Primordial Goddess, The Great Mother",
     episode:'Episode 1', emoji:'🌊',
     color:'linear-gradient(135deg,#001A1A,#002828)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/mx8FaSGtuIA/hqdefault.jpg',
     desc:'The origin story of the divine feminine — who she was before the world forgot her name.',
     youtubeId:'JH1dyHH-yCo' },
 
   { id:102, type:'video', title:"Hoodoo, Voodoo & Divination",
     episode:'Episode 2', emoji:'🔮',
     color:'linear-gradient(135deg,#0A001A,#14002E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/M-uOiAHaYfo/hqdefault.jpg',
     desc:'Reclaiming the sacred practices our ancestors used to navigate fate and fortune.',
     youtubeId:'mx8FaSGtuIA' },
 
   { id:103, type:'video', title:"The Sacred Womb, Critical Mass Activation",
     episode:'Episode 3', emoji:'🌀',
     color:'linear-gradient(135deg,#1A000A,#2E0014)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/aCw8_91usSc/hqdefault.jpg',
     desc:'The womb as cosmic portal — activating the divine creative power within.',
     youtubeId:'M-uOiAHaYfo' },
 
   { id:104, type:'video', title:"Alchemy, Astrology & Destiny",
     episode:'Episode 4', emoji:'⚗️',
     color:'linear-gradient(135deg,#1A1000,#2E1E00)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/WlhZXKeprrE/hqdefault.jpg',
     desc:'How the stars, elements, and your soul contract work together to shape your path.',
     youtubeId:'aCw8_91usSc' },
 
   { id:105, type:'video', title:"Is America Atlantis?",
     episode:'Episode 5', emoji:'🌊',
     color:'linear-gradient(135deg,#001018,#001A2A)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/i1-_XpXBvVc/hqdefault.jpg',
     desc:'A deep dive into the hidden mythology of the American continent and its Atlantean parallels.',
     youtubeId:'WlhZXKeprrE' },
 
   { id:106, type:'video', title:"The Fall & Rise of The Matriarchs",
     episode:'Episode 6', emoji:'👑',
     color:'linear-gradient(135deg,#18000A,#2A0014)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/BP5QBfxkfQM/hqdefault.jpg',
     desc:'Tracing the suppression and resurrection of feminine power across civilizations.',
     youtubeId:'i1-_XpXBvVc' },
 
   { id:107, type:'video', title:"Saturn in Pisces",
     episode:'Episode 7', emoji:'🪐',
     color:'linear-gradient(135deg,#0A0A1A,#12122E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/9cQt62-1-Iw/hqdefault.jpg',
     desc:'Navigating the transit that is reshaping collective consciousness and dissolving old structures.',
     youtubeId:'BP5QBfxkfQM' },
 
   { id:108, type:'video', title:"Breaking Narcissistic Spells",
     episode:'Episode 8', emoji:'🔓',
     color:'linear-gradient(135deg,#1A0A00,#2A1400)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/FA-H_dPeAJM/hqdefault.jpg',
     desc:'Energetic and psychological tools to break the cycles of narcissistic manipulation.',
     youtubeId:'9cQt62-1-Iw' },
 
   { id:109, type:'video', title:"Who are the Titans?",
     episode:'Episode 9', emoji:'⚡',
     color:'linear-gradient(135deg,#0E0A00,#1E1600)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/XTrG-MYgCdc/hqdefault.jpg',
     desc:'Mythological intelligence meets Afrofuturist research — uncovering the original titans.',
     youtubeId:'FA-H_dPeAJM' },
 
   { id:110, type:'video', title:"Tapping into Your Superpowers",
     episode:'Episode 10', emoji:'🦋',
     color:'linear-gradient(135deg,#0A1A00,#142800)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/ED_kPW3b1Fg/hqdefault.jpg',
     desc:'Activating dormant gifts through ancestral alignment, frequency, and intention.',
     youtubeId:'XTrG-MYgCdc' },
 
   { id:111, type:'video', title:"God's Money Pt. 1",
     episode:'Episode 11', emoji:'💰',
     color:'linear-gradient(135deg,#1A1200,#2E1E00)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/n57p03dL0qg/hqdefault.jpg',
     desc:'The sacred economics of the universe — how divine law governs real wealth.',
     youtubeId:'ED_kPW3b1Fg' },
 
   { id:112, type:'video', title:"The Rise of The Divine Feminine",
     episode:'Episode 12', emoji:'🌹',
     color:'linear-gradient(135deg,#1A0010,#2E001C)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/vcyTbMgIxtg/hqdefault.jpg',
     desc:'A visionary look at the global activation of feminine wisdom and what it means for all of us.',
     youtubeId:'n57p03dL0qg' },
 
   { id:113, type:'video', title:"Bonus Episode — Title Coming Soon",
     episode:'Episode 13', emoji:'✨',
     color:'linear-gradient(135deg,#0A0A14,#14141E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/nWlaOjB2Bww/hqdefault.jpg',
     desc:'More sacred wisdom from the Stella Maris archives — episode title coming soon.',
     youtubeId:'vcyTbMgIxtg' },
 
   { id:114, type:'video', title:"Bonus Episode — Title Coming Soon",
     episode:'Episode 14', emoji:'✨',
     color:'linear-gradient(135deg,#0A1414,#0E1E1E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/yKXRXDjgDpw/hqdefault.jpg',
     desc:'More sacred wisdom from the Stella Maris archives — episode title coming soon.',
     youtubeId:'nWlaOjB2Bww' },
 
   { id:115, type:'video', title:"Bonus Episode — Title Coming Soon",
     episode:'Episode 15', emoji:'✨',
     color:'linear-gradient(135deg,#140A14,#1E0E1E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/stellamarispodcast.jpg?v=1738169155',
+    coverImg:'https://img.youtube.com/vi/yKXRXDjgDpw/hqdefault.jpg',
     desc:'More sacred wisdom from the Stella Maris archives — episode title coming soon.',
     youtubeId:'yKXRXDjgDpw' },
 ];
@@ -1131,118 +1171,118 @@ const TIKTOK_VIDEOS = [
   { id:307, type:'video', title:'MahMah Tea with the People (Live)',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/yRRpkp8Iyp0/hqdefault.jpg',
     desc:'MahMah Tea with the People — live and in the community.',
     youtubeId:'E5N7q0mqecU' },
   { id:308, type:'video', title:'Trust Issues',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/1dnzIPohFWw/hqdefault.jpg',
     desc:'Trust Issues — MahMah Tea speaks the truth.',
     youtubeId:'yRRpkp8Iyp0' },
   { id:309, type:'video', title:'The Power of Words',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/_hCur5FUu7Q/hqdefault.jpg',
     desc:'The Power of Words — frequency, intention, and manifestation.',
     youtubeId:'1dnzIPohFWw' },
   { id:310, type:'video', title:'Where Do We Go From Here',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/hEYNy77ZfZk/hqdefault.jpg',
     desc:'Where Do We Go From Here — a live exploration with MahMah Tea.',
     youtubeId:'_hCur5FUu7Q' },
   { id:311, type:'video', title:'Crownloads & DNA Codes',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/fK64HtXIWxA/hqdefault.jpg',
     desc:'Crownloads & DNA Codes — ancestral intelligence decoded.',
     youtubeId:'hEYNy77ZfZk' },
   { id:312, type:'video', title:'Vampires',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/Qsfj9JxoTro/hqdefault.jpg',
     desc:'Vampires — energy drains, psychic attacks, and protection.',
     youtubeId:'fK64HtXIWxA' },
   { id:313, type:'video', title:'Queen Kalafiya',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/EhLgSgReF7g/hqdefault.jpg',
     desc:'Queen Kalafiya — honoring the divine feminine.',
     youtubeId:'Qsfj9JxoTro' },
   { id:314, type:'video', title:'The Primordial Mist',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/KKqk5FGDSuU/hqdefault.jpg',
     desc:'The Primordial Mist — origins, creation, and cosmic memory.',
     youtubeId:'EhLgSgReF7g' },
 
   { id:301, type:'video', title:'Guardians & Gatekeepers',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/tBv3H65oarI/hqdefault.jpg',
     desc:'Live session with MahMah Tea — Guardians & Gatekeepers.',
     youtubeId:'KKqk5FGDSuU' },
   { id:302, type:'video', title:'Late Night with MahMah Tea',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/0nJmel25J6E/hqdefault.jpg',
     desc:'Late Night with MahMah Tea — live and unfiltered.',
     youtubeId:'tBv3H65oarI' },
   { id:303, type:'video', title:'Astrology with MahMah Tea',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/Q0-1P4exQgI/hqdefault.jpg',
     desc:'Astrology with MahMah Tea — live cosmic intelligence.',
     youtubeId:'0nJmel25J6E' },
   { id:304, type:'video', title:'Late Night TikTok Live',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/NwCA-2jodMk/hqdefault.jpg',
     desc:'Late Night TikTok Live with MahMah Tea.',
     youtubeId:'Q0-1P4exQgI' },
   { id:305, type:'video', title:'What If?? w/Sha Blyss aka MahMah Tea',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/xTQszzSC870/hqdefault.jpg',
     desc:'What If?? — a live exploration with Sha Blyss aka MahMah Tea.',
     youtubeId:'NwCA-2jodMk' },
   { id:306, type:'video', title:'Flashback (Happy Summer Solstice!)',
     episode:'MahMah Tea Video', emoji:'📱',
     color:'linear-gradient(135deg,#001A1A,#002E2E)',
-    coverImg:'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/MAHMAH_TEA_VAULT_COVER_PHOTO.jpg?v=1776959195',
+    coverImg:'https://img.youtube.com/vi/BGitfWm1K4c/hqdefault.jpg',
     desc:'Flashback — Happy Summer Solstice! Live with MahMah Tea.',
     youtubeId:'xTQszzSC870' },
 ];
 
 const MUSIC_VIDEOS = [
   { id:401, type:'musicvideo', title:"I'm On Up Now",
-    emoji:'🎬', coverImg:'https://img.youtube.com/vi/BGitfWm1K4c/hqdefault.jpg',
+    emoji:'🎬', coverImg:'https://img.youtube.com/vi/5gvi2iaTzqM/hqdefault.jpg',
     color:'linear-gradient(135deg,#0A0A1A,#1A1A3A)',
     desc:"I'm On Up Now — official music video by Sha Blyss aka MahMah Tea.",
     youtubeId:'BGitfWm1K4c' },
   { id:402, type:'musicvideo', title:'Good Girl Bad Girl',
-    emoji:'🎬', coverImg:'https://img.youtube.com/vi/5gvi2iaTzqM/hqdefault.jpg',
+    emoji:'🎬', coverImg:'https://img.youtube.com/vi/uH4L76xARUQ/hqdefault.jpg',
     color:'linear-gradient(135deg,#1A0010,#2E0020)',
     desc:'Good Girl Bad Girl — official music video by Sha Blyss aka MahMah Tea.',
     youtubeId:'5gvi2iaTzqM' },
   { id:403, type:'musicvideo', title:"Ma's Money",
-    emoji:'🎬', coverImg:'https://img.youtube.com/vi/uH4L76xARUQ/hqdefault.jpg',
+    emoji:'🎬', coverImg:'https://img.youtube.com/vi/0ncfr312uio/hqdefault.jpg',
     color:'linear-gradient(135deg,#0A1A00,#1A3A00)',
     desc:"Ma's Money — official music video by Sha Blyss aka MahMah Tea.",
     youtubeId:'uH4L76xARUQ' },
   { id:404, type:'musicvideo', title:'My Rituals',
-    emoji:'🎬', coverImg:'https://img.youtube.com/vi/0ncfr312uio/hqdefault.jpg',
+    emoji:'🎬', coverImg:'https://img.youtube.com/vi/EvLrCXnqpfo/hqdefault.jpg',
     color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',
     desc:'My Rituals — official music video by Sha Blyss aka MahMah Tea.',
     youtubeId:'0ncfr312uio' },
   { id:405, type:'musicvideo', title:'She Rises',
-    emoji:'🎬', coverImg:'https://img.youtube.com/vi/EvLrCXnqpfo/hqdefault.jpg',
+    emoji:'🎬', coverImg:'https://img.youtube.com/vi/1d9Sp2pUMmU/hqdefault.jpg',
     color:'linear-gradient(135deg,#1A1A00,#3A3A00)',
     desc:'She Rises — official music video by Sha Blyss aka MahMah Tea.',
     youtubeId:'EvLrCXnqpfo' },
   { id:406, type:'musicvideo', title:'Black Madonna',
-    emoji:'🎬', coverImg:'https://img.youtube.com/vi/1d9Sp2pUMmU/hqdefault.jpg',
+    emoji:'🎬', coverImg:'https://img.youtube.com/vi/f_VyiAEbS1E/hqdefault.jpg',
     color:'linear-gradient(135deg,#0A0A0A,#1A1A1A)',
     desc:'Black Madonna — official music video by Sha Blyss aka MahMah Tea.',
     youtubeId:'1d9Sp2pUMmU' },
@@ -1533,6 +1573,12 @@ async function removeFromPlaylist(idx){
   if(!track) return;
   await togglePlaylistTrack(track.content_id,track.track_index,track.track_title,track.track_url,null);
   renderPlaylistTab();
+}
+
+function goHome(){
+  // Scroll to top and switch to stream tab
+  window.scrollTo({top:0, behavior:'smooth'});
+  switchTab('stream');
 }
 
 function doLogout(){
