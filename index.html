@@ -1779,7 +1779,7 @@ function addMusicVideoToPlaylist(id, btnEl){
   togglePlaylistItem(id, id, 0, v.title, 'musicvideo:'+v.youtubeId, btnEl, v.coverImg);
 }
 
-function renderMusicVideos(){renderTikTokVideos(){
+function renderTikTokVideos(){
   const grid = document.getElementById('tiktok-grid');
   if(!grid) return;
   const isActive = user && (user.status === 'active' || user.trial === true);
