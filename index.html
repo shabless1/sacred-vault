@@ -1499,29 +1499,43 @@ function renderPlaylistTab(){
 function playPlaylistTrack(idx){
   const track=userPlaylist[idx];
   if(!track) return;
+
   currentAlbum={id:-1,title:'My Playlist',emoji:'♡',color:'linear-gradient(135deg,#1A0A14,#2A0E1E)',tracks:userPlaylist.map(p=>p.track_title),trackUrls:userPlaylist.map(p=>p.track_url)};
   currentTrackIdx=idx;
 
-  // Stop current audio cleanly without wiping src yet
+  // ── Check if this is a music video track ──
+  if(track.track_url && track.track_url.startsWith('musicvideo:')){
+    const ytId = track.track_url.replace('musicvideo:','');
+    // Find the video in any array
+    const v = MUSIC_VIDEOS.find(x=>x.youtubeId===ytId)
+           || VIDEOS.find(x=>x.youtubeId===ytId)
+           || PATREON_VIDEOS.find(x=>x.youtubeId===ytId)
+           || TIKTOK_VIDEOS.find(x=>x.youtubeId===ytId);
+    if(v){
+      openVideo(v.id);
+      currentPlayingTrackIdx=idx;
+      return;
+    }
+  }
+
+  // ── Audio track ──
   const a=document.getElementById('audio-el');
   a.pause();
   setEQActive(false);
 
-  // Hide all modal views, show audio
   ['pdf-view','video-view','album-view','upgrade-view'].forEach(id=>{
     document.getElementById(id).style.display='none';
   });
   document.getElementById('audio-view').style.display='flex';
 
-  // Set art and info
-  // Look up cover art for this track
-  const trackContent = CONTENT.find(c => c.id === track.content_id);
+  // Look up cover art
+  const trackContent = CONTENT.find(c => c.id === track.content_id)
+    || MUSIC_VIDEOS.find(c => c.id === track.content_id);
   const trackCover = trackContent?.coverImg || null;
   setPlayerArt(trackCover, '♡', trackContent?.color || 'linear-gradient(135deg,#1A0A14,#2A0E1E)');
   document.getElementById('audio-player-title').textContent=track.track_title;
   document.getElementById('audio-player-author').textContent='My Playlist · Track '+(idx+1)+' of '+userPlaylist.length;
 
-  // Play
   a.src=track.track_url;
   a.load();
   a.play().then(()=>{
