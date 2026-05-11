@@ -323,18 +323,37 @@ audio{display:none;}
     <p class="login-sub">House of MahMah Tea Digital Library</p>
     <p class="login-tagline">"Knowledge is the original currency"</p>
     <div id="step-email">
-      <div class="field-wrap">
-        <label>Email Address</label>
-        <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/>
+
+      <!-- ── PATH 1: SUBSCRIBER ── -->
+      <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:18px 20px;margin-bottom:12px;">
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">✦ Already a Subscriber</div>
+        <div class="field-wrap" style="margin-bottom:10px;">
+          <input type="email" id="login-email" placeholder="Enter your email address" autocomplete="email" style="margin:0;"/>
+        </div>
+        <button class="btn-enter" id="login-btn" onclick="startLogin()" style="width:100%;margin:0;">✦ Enter the Vault ✦</button>
       </div>
-      <button class="btn-enter" id="login-btn" onclick="startLogin()">✦ Enter the Vault ✦</button>
-      <div class="login-error" id="login-error"></div>
-      <p class="login-help">
-        Enter your email to access your library.<br/>
-        Subscribers are verified instantly.<br/><br/>
-        <a href="#" onclick="startTrial()" style="color:var(--gold);font-weight:600;">✦ Start your 3-day free trial →</a><br/><br/>
-        Already a member? Just enter your email above.<br/>
-        Need help? <a href="mailto:support@sacredtea.net">Contact support →</a>
+
+      <!-- ── DIVIDER ── -->
+      <div style="display:flex;align-items:center;gap:10px;margin:8px 0;">
+        <div style="flex:1;height:1px;background:rgba(255,255,255,.08);"></div>
+        <span style="font-size:.72rem;color:var(--text-dim);letter-spacing:.08em;">OR</span>
+        <div style="flex:1;height:1px;background:rgba(255,255,255,.08);"></div>
+      </div>
+
+      <!-- ── PATH 2: FREE TRIAL ── -->
+      <div style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:18px 20px;">
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#b48ef5;margin-bottom:6px;">🎁 New Here? Try It Free</div>
+        <p style="font-size:.82rem;color:var(--text-dim);margin-bottom:12px;line-height:1.6;">Enter your email below and get <strong style="color:#fff;">3 days of full access</strong> — no credit card required.</p>
+        <div class="field-wrap" style="margin-bottom:10px;">
+          <input type="email" id="trial-email" placeholder="Enter your email to start free trial" autocomplete="email" style="margin:0;border-color:rgba(139,92,246,.4);"/>
+        </div>
+        <button onclick="startTrialFromInput()" style="width:100%;padding:13px;background:linear-gradient(135deg,#7c3aed,#9d5cf5);border:none;border-radius:8px;color:#fff;font-family:var(--font-body);font-size:.9rem;font-weight:700;cursor:pointer;letter-spacing:.04em;">🎁 Activate My 3-Day Free Trial</button>
+      </div>
+
+      <div class="login-error" id="login-error" style="margin-top:12px;"></div>
+      <p style="font-size:.72rem;color:var(--text-dim);text-align:center;margin-top:14px;line-height:1.7;">
+        Need help? <a href="mailto:support@sacredtea.net" style="color:var(--gold);">Contact support →</a> &nbsp;·&nbsp;
+        <a href="https://sacredtea.net/pages/sacred-access" target="_blank" style="color:var(--gold);">Subscribe →</a>
       </p>
     </div>
     <div id="step-loading" style="display:none;text-align:center;padding:24px 0;">
@@ -1770,21 +1789,30 @@ window.addEventListener('load', async ()=>{
   loadSession();
 });
 
-async function startTrial(){
-  const email = document.getElementById('login-email').value.trim();
+async function startTrialFromInput(){
+  const email = document.getElementById('trial-email').value.trim();
+  if(!email){
+    document.getElementById('login-error').style.display='block';
+    document.getElementById('login-error').textContent='Please enter your email address to start your free trial.';
+    document.getElementById('trial-email').focus();
+    return;
+  }
+  // Sync to login-email so the rest of startTrial works
+  document.getElementById('login-email').value = email;
+  await startTrial(email);
+}
+
+async function startTrial(emailParam){
+  const email = emailParam || document.getElementById('login-email').value.trim();
   const err = document.getElementById('login-error');
   const btn = document.getElementById('login-btn');
   err.style.display='none';
 
   if(!email){
     err.style.display='block';
-    err.textContent='Please enter your email address first, then click Start your free trial.';
-    document.getElementById('login-email').focus();
+    err.textContent='Please enter your email address to start your free trial.';
     return;
   }
-
-  btn.textContent='Starting trial…';
-  btn.disabled=true;
   document.getElementById('step-loading').style.display='block';
   document.getElementById('step-email').style.display='none';
 
