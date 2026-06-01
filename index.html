@@ -16,7 +16,7 @@
   --font-head:'Cormorant Garamond',serif;--font-body:'Nunito',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-height:100vh;min-height:100dvh;overflow-x:hidden;}
 
 /* ── STARS ── */
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -105,7 +105,7 @@ body{font-family:var(--font-body);background:var(--deep);color:var(--text);min-h
 .btn-resub{padding:8px 18px;background:var(--red);border:none;border-radius:8px;color:#fff;font-family:var(--font-body);font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;}
 
 /* ── MAIN ── */
-#app{position:relative;z-index:1;min-height:100vh;}
+#app{position:relative;z-index:1;min-height:100vh;min-height:100dvh;}
 .library{max-width:1140px;margin:0 auto;padding:40px 28px 90px;}
 .library-greeting{margin-bottom:30px;}
 .library-greeting h1{font-family:var(--font-head);font-size:2.3rem;font-weight:300;margin-bottom:5px;}
@@ -364,6 +364,13 @@ audio{display:none;}
 /* spring-weighted card lift + warm gold-tinted glow (replaces flat black shadow on hover) */
 .content-card{transition:transform .35s cubic-bezier(.34,1.4,.5,1),box-shadow .3s ease,background .25s ease,border-color .25s ease;}
 .content-card:hover:not(.locked){box-shadow:0 16px 46px rgba(0,0,0,.5),0 0 0 1px rgba(201,168,76,.22),0 10px 34px rgba(201,168,76,.09);}
+
+/* ── POLISH & A11Y (facelift phase 4) ── */
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth;}}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+.field-wrap input:focus-visible{outline:none;}
+.time-row,.u-price,.upgrade-price-display,.pdf-page-info{font-variant-numeric:tabular-nums;}
+.login-title,.library-greeting h1,.upgrade-section h2,.upgrade-modal-inner h2,.card-title,.modal-title,.audio-title,.album-info h3,.video-title{text-wrap:balance;}
 </style>
 </head>
 <body>
