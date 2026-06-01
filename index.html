@@ -353,6 +353,17 @@ audio{display:none;}
   .sv-reveal .content-card:nth-child(9){animation-delay:.35s;}
   .sv-reveal .content-card:nth-child(n+10){animation-delay:.39s;}
 }
+
+/* ── MICRO-INTERACTIONS (facelift phase 3) ── */
+/* pressed feedback — a physical click on every interactive control */
+.btn-enter:active,.btn-subscribe-big:active,.btn-sub-modal:active,.btn-unlock:active,.btn-resub:active{transform:translateY(1px) scale(.985);}
+.tab-btn:active,.filter-btn:active,.btn-stream:active,.btn-buy:active,.btn-logout:active,.header-home-btn:active,.btn-close:active,.btn-heart:active,.pdf-toolbar button:active{transform:scale(.94);}
+.ctrl-btn:active{transform:scale(.92);}
+.ctrl-btn.play-pause:active{transform:scale(.96);}
+.track-row:active{transform:scale(.992);}
+/* spring-weighted card lift + warm gold-tinted glow (replaces flat black shadow on hover) */
+.content-card{transition:transform .35s cubic-bezier(.34,1.4,.5,1),box-shadow .3s ease,background .25s ease,border-color .25s ease;}
+.content-card:hover:not(.locked){box-shadow:0 16px 46px rgba(0,0,0,.5),0 0 0 1px rgba(201,168,76,.22),0 10px 34px rgba(201,168,76,.09);}
 </style>
 </head>
 <body>
