@@ -334,6 +334,25 @@ audio{display:none;}
 .eq-bar:nth-child(15){background:linear-gradient(to top,#ff00ff,#cc00ff);}
 .eq-bar:nth-child(16){background:linear-gradient(to top,#cc00ff,#ff00ff);}
 @keyframes eq-bounce{0%{transform:scaleY(.06);}100%{transform:scaleY(1);}}
+
+/* ── ENTRANCE MOTION (facelift phase 2) ── */
+/* fill-mode:backwards so resting state reverts to normal styles — never overrides the hover lift */
+@keyframes sv-fade-in{from{opacity:0;}to{opacity:1;}}
+@keyframes sv-rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@media (prefers-reduced-motion: no-preference){
+  .sv-reveal{animation:sv-fade-in .4s ease backwards;}
+  .sv-reveal .content-card{animation:sv-rise .55s cubic-bezier(.22,.61,.36,1) backwards;}
+  .sv-reveal .content-card:nth-child(1){animation-delay:.03s;}
+  .sv-reveal .content-card:nth-child(2){animation-delay:.07s;}
+  .sv-reveal .content-card:nth-child(3){animation-delay:.11s;}
+  .sv-reveal .content-card:nth-child(4){animation-delay:.15s;}
+  .sv-reveal .content-card:nth-child(5){animation-delay:.19s;}
+  .sv-reveal .content-card:nth-child(6){animation-delay:.23s;}
+  .sv-reveal .content-card:nth-child(7){animation-delay:.27s;}
+  .sv-reveal .content-card:nth-child(8){animation-delay:.31s;}
+  .sv-reveal .content-card:nth-child(9){animation-delay:.35s;}
+  .sv-reveal .content-card:nth-child(n+10){animation-delay:.39s;}
+}
 </style>
 </head>
 <body>
@@ -1977,6 +1996,7 @@ function startSession(){
     renderTikTokVideos();
     renderMusicVideos();
     loadPlaylist();
+    svReveal('stream');
   },400);
 }
 
@@ -1988,6 +2008,14 @@ function goSubscribe(){
 }
 
 // ── TABS ──
+// staggered entrance plays the first time a tab is revealed; later switches stay instant (snappy nav)
+let svRevealed=new Set();
+function svReveal(tab){
+  if(svRevealed.has(tab)) return;
+  svRevealed.add(tab);
+  const el=document.getElementById('tab-'+tab+'-content');
+  if(el) el.classList.add('sv-reveal');
+}
 function switchTab(tab){
   ['stream','videos','deepdive','patreon','tiktok','musicvideos','newsletter','playlist','myvideos'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',tab===t);
@@ -1996,6 +2024,7 @@ function switchTab(tab){
   if(tab==='playlist') renderPlaylistTab();
   if(tab==='tiktok') renderTikTokVideos();
   if(tab==='musicvideos') renderMusicVideos();
+  svReveal(tab);
 }
 
 // ── RENDER STREAM LIBRARY ──
