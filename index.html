@@ -374,19 +374,6 @@ audio{display:none;}
 .login-title,.library-greeting h1,.upgrade-section h2,.upgrade-modal-inner h2,.card-title,.modal-title,.audio-title,.album-info h3,.video-title{text-wrap:balance;}
 
 /* ── BOLD PASS — cinematic facelift ── */
-/* shooting stars — thin gold streaks crossing the sky on a long loop */
-.meteor{position:fixed;top:0;left:0;width:2px;height:2px;z-index:0;pointer-events:none;opacity:0;}
-.meteor::before{content:'';position:absolute;width:160px;height:2px;border-radius:2px;
-  background:linear-gradient(90deg,rgba(232,201,122,0),rgba(232,201,122,.95));
-  transform:rotate(35deg);transform-origin:left center;
-  box-shadow:0 0 8px 1px rgba(232,201,122,.5);}
-@keyframes sv-meteor{
-  0%{opacity:0;transform:translate3d(-200px,-120px,0);}
-  6%{opacity:1;}
-  18%{opacity:1;}
-  26%{opacity:0;transform:translate3d(560px,400px,0);}
-  100%{opacity:0;transform:translate3d(560px,400px,0);}
-}
 /* login title — slow gold shimmer sweeping across the wordmark */
 @keyframes sv-shimmer{to{background-position:200% center;}}
 /* login box — cinematic rise-and-settle on entry */
@@ -394,8 +381,6 @@ audio{display:none;}
 /* sigil — breathing glow */
 @keyframes sv-sigil{0%,100%{opacity:.7;text-shadow:0 0 6px rgba(201,168,76,.3);}50%{opacity:1;text-shadow:0 0 22px rgba(232,201,122,.75);}}
 @media (prefers-reduced-motion: no-preference){
-  .meteor.m1{left:8%;animation:sv-meteor 9s ease-in infinite;animation-delay:2s;}
-  .meteor.m2{left:58%;animation:sv-meteor 11s ease-in infinite;animation-delay:7s;}
   .login-title{background:linear-gradient(100deg,var(--gold) 20%,#FFF6DB 38%,var(--gold-light) 50%,var(--gold) 70%);background-size:200% auto;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:sv-shimmer 5.5s linear infinite;}
   #login-screen:not(.hidden) .login-box{animation:sv-box-in .9s cubic-bezier(.16,1,.3,1) backwards;}
   .vault-sigil{animation:sv-sigil 3s ease-in-out infinite;}
@@ -406,12 +391,6 @@ audio{display:none;}
    independent of motion settings. Transforms the
    surfaces you actually look at: login, headline, cards.
    ════════════════════════════════════════════════ */
-
-/* meteors — longer, brighter streaks with a glowing head */
-.meteor{box-shadow:0 0 10px 2px rgba(232,201,122,.9);}
-.meteor::before{width:260px;height:2px;
-  background:linear-gradient(90deg,rgba(232,201,122,0),rgba(232,201,122,.4) 60%,rgba(255,246,219,.95));
-  box-shadow:0 0 12px 1px rgba(232,201,122,.6);}
 
 /* login box — dimensional surface with an inner gold halo */
 .login-box{
@@ -452,8 +431,6 @@ audio{display:none;}
 <body>
 <div class="stars"></div>
 <div class="grain"></div>
-<div class="meteor m1"></div>
-<div class="meteor m2"></div>
 
 <!-- ══ LOGIN ══ -->
 <div id="login-screen">
