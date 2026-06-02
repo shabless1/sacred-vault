@@ -400,6 +400,53 @@ audio{display:none;}
   #login-screen:not(.hidden) .login-box{animation:sv-box-in .9s cubic-bezier(.16,1,.3,1) backwards;}
   .vault-sigil{animation:sv-sigil 3s ease-in-out infinite;}
 }
+
+/* ════════════════════════════════════════════════
+   STATIC SURFACE UPGRADE — visible on every device,
+   independent of motion settings. Transforms the
+   surfaces you actually look at: login, headline, cards.
+   ════════════════════════════════════════════════ */
+
+/* meteors — longer, brighter streaks with a glowing head */
+.meteor{box-shadow:0 0 10px 2px rgba(232,201,122,.9);}
+.meteor::before{width:260px;height:2px;
+  background:linear-gradient(90deg,rgba(232,201,122,0),rgba(232,201,122,.4) 60%,rgba(255,246,219,.95));
+  box-shadow:0 0 12px 1px rgba(232,201,122,.6);}
+
+/* login box — dimensional surface with an inner gold halo */
+.login-box{
+  background:radial-gradient(135% 95% at 50% -10%,rgba(201,168,76,.12),transparent 55%),
+             linear-gradient(180deg,rgba(22,20,30,.94),rgba(11,11,16,.94));
+  box-shadow:0 0 130px rgba(201,168,76,.18),0 32px 74px rgba(0,0,0,.85);}
+
+/* login wordmark — bigger, more commanding (solid base for reduced-motion) */
+.login-title{font-size:clamp(2.3rem,9vw,3.1rem);letter-spacing:.015em;line-height:1.08;}
+.vault-sigil{filter:drop-shadow(0 0 24px rgba(232,201,122,.7));}
+.login-tagline{color:rgba(232,201,122,.62);}
+
+/* library greeting — a display headline with real presence */
+.library-greeting h1{font-size:clamp(2.2rem,6vw,3.2rem);letter-spacing:-.012em;line-height:1.04;font-weight:400;}
+.library-greeting h1 em{font-weight:500;}
+
+/* content cards — dimensional, lit-from-above, gold-edged */
+.content-card{
+  background:linear-gradient(180deg,#21212e 0%,#16161f 100%);
+  border:1px solid rgba(201,168,76,.16);
+  border-radius:16px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.38);}
+.content-card.locked{box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 4px 14px rgba(0,0,0,.3);}
+
+/* card cover — top gloss, brighter art, glowing emoji */
+.card-cover{font-size:3.4rem;border-radius:16px 16px 0 0;text-shadow:0 3px 16px rgba(0,0,0,.5),0 0 30px rgba(201,168,76,.28);}
+.card-cover .cover-text{text-shadow:0 1px 4px rgba(0,0,0,.7);}
+.card-cover::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(130% 85% at 50% 0%,rgba(255,255,255,.16),transparent 58%);}
+.card-title{font-size:1.16rem;}
+
+/* primary buttons — richer gold with a top sheen */
+.btn-enter,.btn-subscribe-big{
+  background:linear-gradient(180deg,var(--gold-light),var(--gold) 45%,var(--gold-dim));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 18px rgba(201,168,76,.22);}
 </style>
 </head>
 <body>
