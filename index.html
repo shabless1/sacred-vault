@@ -1536,6 +1536,15 @@ const SESSION_KEY = 'sv_session';
 const DEFAULT_COVER = 'https://cdn.shopify.com/s/files/1/0822/8713/2951/files/sacred_vault_sound_background.png?v=1775942697';
 const SESSION_DAYS = 7;
 
+// ── Secure media routing (Crack One) ──
+// R2 is private; media is only reachable through the Worker with a valid token.
+const API_BASE = 'https://sacred-vault-api.shabless1.workers.dev';
+function r2Key(u){ if(!u || u.indexOf('.r2.dev/') < 0) return null; return decodeURIComponent(u.split('.r2.dev/')[1].split('?')[0]); }
+function streamSrc(u){ const k = r2Key(u); if(!k) return u; return API_BASE + '/stream?key=' + encodeURIComponent(k) + '&t=' + encodeURIComponent((user && user.token) || ''); }
+function coverSrc(u){ const k = r2Key(u); if(!k) return u; return API_BASE + '/cover?key=' + encodeURIComponent(k); }
+// Rewrite R2 cover art to the public /cover route so covers survive a private bucket (idempotent).
+try{ CONTENT.forEach(it=>{ if(it.coverImg) it.coverImg = coverSrc(it.coverImg); }); }catch(e){}
+
 function loadSession(){
   try{
     const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
@@ -1554,7 +1563,7 @@ function loadSession(){
       }
       const msRemaining = expires - new Date();
       const daysRemaining = Math.max(1, Math.ceil(msRemaining / (1000*60*60*24)));
-      user={email:s.email, name:'Beloved', status:'active', trial:true};
+      user={email:s.email, name:'Beloved', status:'active', trial:true, token:s.token};
       showTrialBanner(daysRemaining);
       startSession();
       return true;
@@ -1562,7 +1571,7 @@ function loadSession(){
 
     // Regular session
     if((Date.now()-s.ts)/864e5 > SESSION_DAYS){ localStorage.removeItem(SESSION_KEY); return false; }
-    user={email:s.email, name:s.name, status:'active', renewalDate:null};
+    user={email:s.email, name:s.name, status:'active', renewalDate:null, token:s.token};
     startSession();
     return true;
   }catch(e){ return false; }
@@ -1598,7 +1607,7 @@ async function startLogin(){
       localStorage.setItem(SESSION_KEY, JSON.stringify({
         email:data.email, name:data.name, token:data.token, ts:Date.now()
       }));
-      user={email:data.email, name:data.name, status:'active', renewalDate:null};
+      user={email:data.email, name:data.name, status:'active', renewalDate:null, token:data.token};
       startSession();
     } else {
       document.getElementById('step-loading').style.display='none';
@@ -1770,7 +1779,7 @@ function playPlaylistTrack(idx){
   document.getElementById('audio-player-title').textContent=track.track_title;
   document.getElementById('audio-player-author').textContent='My Playlist · Track '+(idx+1)+' of '+userPlaylist.length;
 
-  a.src=track.track_url;
+  a.src=streamSrc(track.track_url);
   a.load();
   a.play().then(()=>{
     document.getElementById('play-pause-btn').textContent='⏸';
@@ -1995,13 +2004,14 @@ async function startTrial(emailParam){
       localStorage.setItem(SESSION_KEY, JSON.stringify({
         email: data.email,
         name: data.name || 'Beloved',
+        token: data.token,
         trial: data.trial || false,
         subscriber: data.subscriber || false,
         expires_at: data.expires_at || null,
         days_remaining: data.days_remaining || null,
         ts: Date.now()
       }));
-      user = { email: data.email, name: data.name || 'Beloved', status:'active', trial: data.trial };
+      user = { email: data.email, name: data.name || 'Beloved', status:'active', trial: data.trial, token: data.token };
       if(data.trial) showTrialBanner(data.days_remaining);
       startSession();
     } else {
@@ -2312,7 +2322,7 @@ function openContent(id){
     document.getElementById('audio-player-title').textContent=item.title;
     document.getElementById('audio-player-author').textContent=item.subtitle||item.author;
     const a=document.getElementById('audio-el');
-    a.src=item.fileUrl; a.load();
+    a.src=streamSrc(item.fileUrl); a.load();
     document.getElementById('play-pause-btn').textContent='▶';
     document.getElementById('progress-fill').style.width='0%';
     currentPlayingItem=item;
@@ -2373,7 +2383,7 @@ function playTrack(idx){
     return;
   }
   a.pause();
-  a.src=trackUrl;
+  a.src=streamSrc(trackUrl);
   a.load();
   a.play().then(()=>{
     document.getElementById('audio-art').classList.add('spinning');
