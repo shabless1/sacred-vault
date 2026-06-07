@@ -1550,6 +1550,9 @@ function loadSession(){
     const s=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');
     if(!s) return false;
 
+    // Sessions created before secure streaming have no token — force one clean re-login to mint it.
+    if(!s.token){ localStorage.removeItem(SESSION_KEY); return false; }
+
     // Trial session — check expiry
     if(s.trial){
       const expires = new Date(s.expires_at);
