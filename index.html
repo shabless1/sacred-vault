@@ -1542,6 +1542,7 @@ const API_BASE = 'https://sacred-vault-api.shabless1.workers.dev';
 function r2Key(u){ if(!u || u.indexOf('.r2.dev/') < 0) return null; return decodeURIComponent(u.split('.r2.dev/')[1].split('?')[0]); }
 function streamSrc(u){ const k = r2Key(u); if(!k) return u; return API_BASE + '/stream?key=' + encodeURIComponent(k) + '&t=' + encodeURIComponent((user && user.token) || ''); }
 function coverSrc(u){ const k = r2Key(u); if(!k) return u; return API_BASE + '/cover?key=' + encodeURIComponent(k); }
+function readUrl(u){ if(!u || u.indexOf('/reader-') < 0) return u; const key = 'readers/' + u.replace('/reader-',''); return API_BASE + '/read?key=' + encodeURIComponent(key) + '&t=' + encodeURIComponent((user && user.token) || ''); }
 // Rewrite R2 cover art to the public /cover route so covers survive a private bucket (idempotent).
 try{ CONTENT.forEach(it=>{ if(it.coverImg) it.coverImg = coverSrc(it.coverImg); }); }catch(e){}
 
@@ -2313,7 +2314,7 @@ function openContent(id){
   document.getElementById('modal-title').textContent=item.title;
   document.getElementById('modal-sub').textContent=item.subtitle||item.author;
   if(item.type==='ebook'){
-    window.location.href = item.readerUrl;
+    window.location.href = readUrl(item.readerUrl);
     return;
   } else if(item.type==='album'||item.type==='audiobook'){
     openAlbum(item);
