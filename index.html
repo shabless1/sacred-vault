@@ -801,6 +801,7 @@ audio{display:none;}
     <!-- Video -->
     <div class="video-player" id="video-view" style="display:none">
       <iframe id="video-frame" src="" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      <video id="video-native" controls playsinline style="display:none;width:100%;max-height:72vh;background:#000;border-radius:8px;"></video>
       <div class="video-info">
         <div class="video-title" id="video-title">—</div>
         <div class="video-desc" id="video-desc">—</div>
@@ -1200,6 +1201,12 @@ const VIDEOS = [
 
 // ── DEEP DIVE PODCASTS ─────────────────────────────────
 const DEEP_DIVE_PODCASTS = [
+  { id:601, type:'video', title:"Ma's Money · Signed Not Sealed",
+    episode:'Full Length', emoji:'🌀',
+    color:'linear-gradient(135deg,#1A0033,#2E0052)',
+    desc:'Exclusive full-length — streamed securely, available only inside The Sacred Vault.',
+    videoKey:'signed-not-sealed.mp4',
+    series:'Deep Dive Podcast' },
   { id:501, type:'video', title:'Financial Astrology · Full Moon In Sagittarius',
     episode:'Episode 1', emoji:'🌀',
     color:'linear-gradient(135deg,#1A0033,#2E0052)',
@@ -2487,6 +2494,19 @@ async function openVideo(id){
   document.getElementById('video-title').textContent=v.title;
   document.getElementById('video-desc').textContent=v.desc;
   const frame=document.getElementById('video-frame');
+  const nv=document.getElementById('video-native');
+  frame.style.display=''; if(nv){ nv.style.display='none'; nv.src=''; }
+  if(v.videoKey){
+    // Gated native video served from private R2 via the Worker /stream route
+    frame.style.display='none'; frame.src='';
+    if(nv){
+      nv.style.display='block';
+      nv.src=API_BASE+'/stream?key='+encodeURIComponent(v.videoKey)+'&t='+encodeURIComponent((user&&user.token)||'');
+      nv.load();
+    }
+    showModal();
+    return;
+  }
   if(v.streamUid){
     // Gated Cloudflare Stream video — fetch a signed playback token for this member
     frame.src='';
@@ -2526,6 +2546,8 @@ function resetModal(){
   document.getElementById('album-view').style.display='none';
   document.getElementById('upgrade-view').style.display='none';
   document.getElementById('video-frame').src='';
+  document.getElementById('video-frame').style.display='';
+  const _nv=document.getElementById('video-native'); if(_nv){ try{_nv.pause();}catch(e){} _nv.src=''; _nv.style.display='none'; }
   document.getElementById('pdf-frame').src='';
   document.getElementById('prev-track-btn').style.display='none';
   document.getElementById('next-track-btn').style.display='none';
