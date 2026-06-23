@@ -488,6 +488,26 @@ audio{display:none;}
 </div>
 
 <!-- ══ APP ══ -->
+<!-- ══ COMMUNITY GUIDELINES GATE ══ -->
+<div id="guidelines-screen" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(8,8,12,.97);backdrop-filter:blur(8px);overflow-y:auto;padding:32px 18px;">
+  <div style="max-width:560px;margin:0 auto;background:var(--surface);border:1px solid var(--border-bright);border-radius:18px;padding:34px 30px;box-shadow:0 30px 90px rgba(0,0,0,.7);">
+    <div style="text-align:center;margin-bottom:4px;font-size:1.5rem;color:var(--gold);letter-spacing:.2em;">✦</div>
+    <h2 style="font-family:var(--font-head);font-weight:400;color:var(--gold-light);text-align:center;font-size:1.5rem;margin-bottom:6px;">Welcome to the Sacred Vault</h2>
+    <p style="text-align:center;color:var(--text-dim);font-size:.86rem;line-height:1.6;margin-bottom:22px;">Before you enter, a few sacred agreements that keep this space safe and sovereign for everyone.</p>
+    <div style="display:flex;flex-direction:column;gap:14px;font-size:.9rem;line-height:1.55;color:var(--text);">
+      <div><strong style="color:var(--gold-light);">1. Honor the space and each other.</strong> This is a community of growth. Speak with respect — no harassment, hate, bullying, or personal attacks. Disagree with grace.</div>
+      <div><strong style="color:var(--gold-light);">2. Keep it PG-13.</strong> No profanity, slurs, or explicit content — nothing you wouldn't say in a room with elders and children present.</div>
+      <div><strong style="color:var(--gold-light);">3. No spam or outside links.</strong> Keep comments genuine — no repetitive or automated posting, and links aren't allowed in the chat or comments.</div>
+      <div><strong style="color:var(--gold-light);">4. Protect the work.</strong> Everything inside the Vault — videos, music, books, and live sessions — is members-only and belongs to House of MahMah Tea. Do not record, screen-capture, download, repost, or redistribute it, and never share your login. This is how the Vault stays sacred and sustainable.</div>
+      <div><strong style="color:var(--gold-light);">5. What's shared here, stays here.</strong> Respect this community's privacy. Don't screenshot conversations or carry members' words outside the Vault.</div>
+      <div><strong style="color:var(--gold-light);">6. Take what serves you.</strong> Content here is for knowledge and resonance — not medical, financial, or legal advice. Walk in your own sovereignty.</div>
+      <div><strong style="color:var(--gold-light);">7. These agreements protect the seat you hold.</strong> Comments may be removed, and members may lose access, for breaking these guidelines.</div>
+    </div>
+    <p style="text-align:center;color:var(--text-dim);font-size:.82rem;font-style:italic;margin:22px 0 18px;">By entering, you agree to walk in alignment with these guidelines.</p>
+    <button onclick="acceptGuidelines()" style="width:100%;padding:15px;background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:10px;color:var(--black);font-family:var(--font-body);font-size:1rem;font-weight:700;letter-spacing:.06em;cursor:pointer;">✦ I Agree — Enter the Vault ✦</button>
+  </div>
+</div>
+
 <div id="trial-banner">
   <span>✦ Free Trial: <span class="trial-days" id="trial-days-text">7 days</span> remaining</span>
   <a href="https://sacredtea.net/products/sacred-vault-all-access-pass" target="_blank">Subscribe to keep access →</a>
@@ -2145,7 +2165,20 @@ function startSession(){
     renderMusicVideos();
     loadPlaylist();
     svReveal('stream');
+    maybeShowGuidelines();
   },400);
+}
+
+// ── COMMUNITY GUIDELINES GATE ──
+const GUIDELINES_VERSION='v1';
+function maybeShowGuidelines(){
+  try{ if(localStorage.getItem('sv_guidelines')===GUIDELINES_VERSION) return; }catch(e){}
+  const g=document.getElementById('guidelines-screen'); if(g) g.style.display='block';
+}
+function acceptGuidelines(){
+  try{ localStorage.setItem('sv_guidelines',GUIDELINES_VERSION); }catch(e){}
+  const g=document.getElementById('guidelines-screen'); if(g) g.style.display='none';
+  if(user&&user.token){ fetch(API_BASE+'/accept-guidelines',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:user.token,version:GUIDELINES_VERSION})}).catch(()=>{}); }
 }
 
 // doLogout defined above in auth section
