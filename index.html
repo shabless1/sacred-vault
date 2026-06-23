@@ -237,6 +237,7 @@ audio{display:none;}
 /* ── VIDEO PLAYER ── */
 .video-player{background:#000;display:flex;flex-direction:column;}
 .video-player iframe{width:100%;aspect-ratio:16/9;border:none;display:block;}
+.video-player iframe.portrait-frame{aspect-ratio:9/16;width:auto;height:78vh;max-width:100%;margin:0 auto;border-radius:8px;}
 .video-info{padding:18px 22px;background:var(--card);}
 .video-title{font-family:var(--font-head);font-size:1.2rem;color:var(--text);margin-bottom:4px;}
 .video-desc{font-size:.82rem;color:var(--text-dim);line-height:1.6;}
@@ -575,6 +576,7 @@ audio{display:none;}
         <button class="filter-btn" id="vf-mahmah" onclick="showVideoFolder('mahmah',this)">📱 MahMah Tea</button>
         <button class="filter-btn" id="vf-akashic" onclick="showVideoFolder('akashic',this)">📂 Akashic Files</button>
         <button class="filter-btn" id="vf-deepdive" onclick="showVideoFolder('deepdive',this)">🌀 Deep Dive</button>
+        <button class="filter-btn" id="vf-sstories" onclick="showVideoFolder('sstories',this)">📖 Sacred Stories</button>
       </div>
     </div>
 
@@ -762,6 +764,10 @@ audio{display:none;}
     </div>
     <div id="tab-deepdive-content" style="display:none">
       <div class="grid" id="deepdive-grid"></div>
+    </div>
+    <div id="tab-sstories-content" style="display:none">
+      <div style="background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.22);border-radius:10px;padding:12px 18px;margin-bottom:22px;font-size:.84rem;color:var(--gold-light);">📖 Sacred Stories — audiobooks in motion, told in full and exclusive to the Vault.</div>
+      <div class="grid" id="sstories-grid"></div>
     </div>
   </main>
 </div>
@@ -1262,6 +1268,15 @@ const VIDEOS = [
 ];
 
 // ── DEEP DIVE PODCASTS ─────────────────────────────────
+const SACRED_STORIES = [
+  { id:610, type:'video', title:"The Story Never Told · Part 1",
+    episode:'Sacred Story', emoji:'📖', portrait:true,
+    color:'linear-gradient(135deg,#1A0A00,#2E1400)',
+    coverImg:'https://sacred-vault-api.shabless1.workers.dev/cover?key=covers/the-story-never-told.png',
+    desc:'An audiobook in motion — a Sacred Story told in full, exclusive to the Vault.',
+    streamUid:'60a66ec1102e28b3962ed32bf47fc1e4' },
+];
+
 const DEEP_DIVE_PODCASTS = [
   { id:601, type:'video', title:"Ma's Money · Signed Not Sealed",
     episode:'Full Length', emoji:'🌀',
@@ -2164,6 +2179,7 @@ function startSession(){
     renderPatreonVideos();
     renderTikTokVideos();
     renderMusicVideos();
+    renderSacredStories();
     loadPlaylist();
     svReveal('stream');
     maybeShowGuidelines();
@@ -2213,17 +2229,39 @@ function switchTab(tab){
   if(tab==='vault') showVaultSection(currentVaultSection);
   svReveal(tab);
 }
+function renderSacredStories(){
+  const grid=document.getElementById('sstories-grid');
+  if(!grid) return;
+  const isActive=user&&(user.status==='active'||user.trial===true);
+  grid.innerHTML=SACRED_STORIES.map(v=>{
+    const locked=!isActive;
+    return `<div class="content-card${locked?' locked':''}" ${!locked?`onclick="openVideo(${v.id})"`:''}>
+      <div class="card-cover" style="aspect-ratio:9/16;height:auto;background:${v.color}">
+        ${v.coverImg?`<img src="${v.coverImg}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1;"/>`:`<span style="font-size:3rem">${v.emoji}</span>`}
+        <div class="type-badge badge-video" style="z-index:3;position:relative">📖 Sacred Story</div>
+      </div>
+      ${locked?`<div class="lock-overlay"><div class="lock-icon">🔒</div><p>Subscribe to watch</p><button class="btn-unlock" onclick="event.stopPropagation();openUpgrade()">$19.99/mo →</button></div>`:''}
+      <div class="card-body">
+        <div class="card-title">${v.title}</div>
+        <div class="card-meta">Sacred Stories · Audiobook</div>
+        <div class="card-desc">${v.desc}</div>
+        <div class="card-actions">${isActive?`<button class="btn-stream" onclick="event.stopPropagation();openVideo(${v.id})">▶ Watch</button>`:''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
 function showVideoFolder(folder, btn){
   currentVideoFolder=folder;
   document.querySelectorAll('#video-folder-row .filter-btn').forEach(b=>b.classList.remove('active'));
   (btn||document.getElementById('vf-'+folder))?.classList.add('active');
-  const map={stella:'videos',mahmah:'tiktok',akashic:'patreon',deepdive:'deepdive'};
-  ['videos','tiktok','patreon','deepdive'].forEach(s=>{const el=document.getElementById('tab-'+s+'-content'); if(el) el.style.display='none';});
+  const map={stella:'videos',mahmah:'tiktok',akashic:'patreon',deepdive:'deepdive',sstories:'sstories'};
+  ['videos','tiktok','patreon','deepdive','sstories'].forEach(s=>{const el=document.getElementById('tab-'+s+'-content'); if(el) el.style.display='none';});
   const target=document.getElementById('tab-'+map[folder]+'-content'); if(target) target.style.display='block';
   if(folder==='stella') renderVideos();
   else if(folder==='mahmah') renderTikTokVideos();
   else if(folder==='akashic') renderPatreonVideos();
   else if(folder==='deepdive') renderDeepDive();
+  else if(folder==='sstories') renderSacredStories();
 }
 function showVaultSection(section, btn){
   currentVaultSection=section;
@@ -2653,7 +2691,7 @@ function playTrack(idx){
 }
 
 async function openVideo(id){
-  const v=VIDEOS.find(x=>x.id===id)||DEEP_DIVE_PODCASTS.find(x=>x.id===id)||PATREON_VIDEOS.find(x=>x.id===id)||TIKTOK_VIDEOS.find(x=>x.id===id)||MUSIC_VIDEOS.find(x=>x.id===id);
+  const v=VIDEOS.find(x=>x.id===id)||DEEP_DIVE_PODCASTS.find(x=>x.id===id)||PATREON_VIDEOS.find(x=>x.id===id)||TIKTOK_VIDEOS.find(x=>x.id===id)||MUSIC_VIDEOS.find(x=>x.id===id)||SACRED_STORIES.find(x=>x.id===id);
   if(!v)return;
   resetModal();
   document.getElementById('modal-title').textContent=v.title;
@@ -2665,6 +2703,7 @@ async function openVideo(id){
   const frame=document.getElementById('video-frame');
   const nv=document.getElementById('video-native');
   frame.style.display=''; if(nv){ nv.style.display='none'; nv.src=''; }
+  frame.classList.toggle('portrait-frame', !!v.portrait);
   if(v.videoKey){
     // Gated native video served from private R2 via the Worker /stream route
     frame.style.display='none'; frame.src='';
