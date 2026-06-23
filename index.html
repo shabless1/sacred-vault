@@ -521,24 +521,21 @@ audio{display:none;}
         <div class="nav-group-label">Music</div>
         <div class="nav-group-btns">
           <button class="tab-btn active" id="tab-stream" onclick="switchTab('stream')">✦ Library</button>
-          <button class="tab-btn" id="tab-musicvideos" onclick="switchTab('musicvideos')">🎬 Videos</button>
+          <button class="tab-btn" id="tab-musicvideos" onclick="switchTab('musicvideos')">🎬 Music Videos</button>
         </div>
       </div>
       <div class="nav-divider"></div>
       <div class="nav-group">
-        <div class="nav-group-label">MahMah Tea</div>
+        <div class="nav-group-label">Watch</div>
         <div class="nav-group-btns">
+          <button class="tab-btn" id="tab-vids" onclick="switchTab('vids')">📺 Videos</button>
           <button class="tab-btn" id="tab-live" onclick="switchTab('live')">🔴 Live</button>
-          <button class="tab-btn" id="tab-tiktok" onclick="switchTab('tiktok')">📱 Videos</button>
-          <button class="tab-btn" id="tab-videos" onclick="switchTab('videos')">🌊 Stella Maris</button>
-          <button class="tab-btn" id="tab-deepdive" onclick="switchTab('deepdive')">🌀 Deep Dive</button>
         </div>
       </div>
       <div class="nav-divider"></div>
       <div class="nav-group">
         <div class="nav-group-label">Wisdom</div>
         <div class="nav-group-btns">
-          <button class="tab-btn" id="tab-patreon" onclick="switchTab('patreon')">📂 Akashic Files</button>
           <button class="tab-btn" id="tab-newsletter" onclick="switchTab('newsletter')">📰 Ma's Money</button>
         </div>
       </div>
@@ -546,11 +543,34 @@ audio{display:none;}
       <div class="nav-group">
         <div class="nav-group-label">Yours</div>
         <div class="nav-group-btns">
-          <button class="tab-btn" id="tab-playlist" onclick="switchTab('playlist')">♡ Playlist</button>
-          <button class="tab-btn" id="tab-myvideos" onclick="switchTab('myvideos')">🎬 Videos</button>
+          <button class="tab-btn" id="tab-vault" onclick="switchTab('vault')">✦ My Vault</button>
         </div>
       </div>
     </nav>
+
+    <!-- Videos (consolidated) -->
+    <div id="tab-vids-content" style="display:none">
+      <div class="filter-row" id="video-folder-row" style="margin-bottom:22px;">
+        <button class="filter-btn active" id="vf-stella" onclick="showVideoFolder('stella',this)">🌊 Stella Maris</button>
+        <button class="filter-btn" id="vf-mahmah" onclick="showVideoFolder('mahmah',this)">📱 MahMah Tea</button>
+        <button class="filter-btn" id="vf-akashic" onclick="showVideoFolder('akashic',this)">📂 Akashic Files</button>
+        <button class="filter-btn" id="vf-deepdive" onclick="showVideoFolder('deepdive',this)">🌀 Deep Dive</button>
+      </div>
+    </div>
+
+    <!-- My Vault (dashboard) -->
+    <div id="tab-vault-content" style="display:none">
+      <div class="filter-row" id="vault-section-row" style="margin-bottom:22px;">
+        <button class="filter-btn active" id="vs-playlist" onclick="showVaultSection('playlist',this)">♡ Playlist</button>
+        <button class="filter-btn" id="vs-videos" onclick="showVaultSection('videos',this)">🎬 Saved Videos</button>
+        <button class="filter-btn" id="vs-bookmarks" onclick="showVaultSection('bookmarks',this)">🔖 Bookmarks</button>
+      </div>
+      <div id="vault-bookmarks" style="display:none;text-align:center;padding:48px 20px;color:var(--text-dim);">
+        <div style="font-size:2.5rem;margin-bottom:12px;">🔖</div>
+        <p>Ebook bookmarks are coming soon.</p>
+        <p style="font-size:.82rem;margin-top:6px;">Your saved places in the books you're reading will live here.</p>
+      </div>
+    </div>
 
     <!-- Live tab -->
     <div id="tab-live-content" style="display:none">
@@ -2130,16 +2150,42 @@ function svReveal(tab){
   const el=document.getElementById('tab-'+tab+'-content');
   if(el) el.classList.add('sv-reveal');
 }
+let currentVideoFolder='stella', currentVaultSection='playlist';
 function switchTab(tab){
-  ['stream','videos','deepdive','patreon','tiktok','musicvideos','newsletter','playlist','myvideos','live'].forEach(t=>{
-    document.getElementById('tab-'+t).classList.toggle('active',tab===t);
-    document.getElementById('tab-'+t+'-content').style.display=tab===t?'block':'none';
+  // hide all sub-content (video folders + vault sections) — controlled by the sub-filters
+  ['videos','tiktok','patreon','deepdive','playlist','myvideos'].forEach(s=>{const el=document.getElementById('tab-'+s+'-content'); if(el) el.style.display='none';});
+  // top-level tabs
+  ['stream','musicvideos','vids','live','newsletter','vault'].forEach(t=>{
+    const btn=document.getElementById('tab-'+t); if(btn) btn.classList.toggle('active',tab===t);
+    const c=document.getElementById('tab-'+t+'-content'); if(c) c.style.display=tab===t?'block':'none';
   });
   if(tab==='live') openLive(); else closeLive();
-  if(tab==='playlist') renderPlaylistTab();
-  if(tab==='tiktok') renderTikTokVideos();
   if(tab==='musicvideos') renderMusicVideos();
+  if(tab==='vids') showVideoFolder(currentVideoFolder);
+  if(tab==='vault') showVaultSection(currentVaultSection);
   svReveal(tab);
+}
+function showVideoFolder(folder, btn){
+  currentVideoFolder=folder;
+  document.querySelectorAll('#video-folder-row .filter-btn').forEach(b=>b.classList.remove('active'));
+  (btn||document.getElementById('vf-'+folder))?.classList.add('active');
+  const map={stella:'videos',mahmah:'tiktok',akashic:'patreon',deepdive:'deepdive'};
+  ['videos','tiktok','patreon','deepdive'].forEach(s=>{const el=document.getElementById('tab-'+s+'-content'); if(el) el.style.display='none';});
+  const target=document.getElementById('tab-'+map[folder]+'-content'); if(target) target.style.display='block';
+  if(folder==='stella') renderVideos();
+  else if(folder==='mahmah') renderTikTokVideos();
+  else if(folder==='akashic') renderPatreonVideos();
+  else if(folder==='deepdive') renderDeepDive();
+}
+function showVaultSection(section, btn){
+  currentVaultSection=section;
+  document.querySelectorAll('#vault-section-row .filter-btn').forEach(b=>b.classList.remove('active'));
+  (btn||document.getElementById('vs-'+section))?.classList.add('active');
+  ['playlist','myvideos'].forEach(s=>{const el=document.getElementById('tab-'+s+'-content'); if(el) el.style.display='none';});
+  document.getElementById('vault-bookmarks').style.display='none';
+  if(section==='playlist'){ const el=document.getElementById('tab-playlist-content'); if(el) el.style.display='block'; renderPlaylistTab(); }
+  else if(section==='videos'){ const el=document.getElementById('tab-myvideos-content'); if(el) el.style.display='block'; renderMyVideos(); }
+  else if(section==='bookmarks'){ document.getElementById('vault-bookmarks').style.display='block'; }
 }
 
 // ── LIVE TAB (gated Cloudflare Stream player + polled live chat) ──
