@@ -1751,6 +1751,7 @@ async function consumeMagicLink(code){
         expires_at:data.expires_at||null, days_remaining:data.days_remaining||null, ts:Date.now()
       }));
       user={email:data.email, name:data.name||'Beloved', status:'active', trial:data.trial, token:data.token};
+      try{ if(data.guidelines_ok) localStorage.setItem('sv_guidelines','v1'); else localStorage.removeItem('sv_guidelines'); }catch(e){}
       if(data.trial) showTrialBanner(data.days_remaining);
       startSession();
     } else {
