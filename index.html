@@ -853,6 +853,21 @@ audio{display:none;}
       </div>
       <button class="btn-sub-modal" onclick="goSubscribe()">Subscribe Now →</button>
     </div>
+    <!-- Community: likes + comments -->
+    <div id="engagement" style="display:none;border-top:1px solid var(--border);margin-top:4px;padding:18px 20px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+        <button id="like-btn" onclick="toggleLike()" style="display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:99px;color:var(--text);font-family:var(--font-body);font-size:.92rem;padding:8px 18px;cursor:pointer;transition:all .2s;">
+          <span id="like-icon">♡</span> <span id="like-count">0</span>
+        </button>
+        <span style="font-size:.82rem;color:var(--text-dim);" id="comment-count-label">Comments</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input id="comment-input" type="text" maxlength="500" placeholder="Add a comment…" onkeydown="if(event.key==='Enter')postComment()" style="flex:1;padding:10px 14px;background:var(--deep);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:.88rem;outline:none;"/>
+        <button onclick="postComment()" style="background:linear-gradient(135deg,var(--gold-dim),var(--gold));border:none;border-radius:8px;color:var(--black);font-weight:700;padding:0 18px;cursor:pointer;font-family:var(--font-body);">Post</button>
+      </div>
+      <div id="comment-error" style="display:none;font-size:.8rem;color:var(--red);margin:6px 0 10px;"></div>
+      <div id="comments-list" style="display:flex;flex-direction:column;gap:12px;max-height:320px;overflow-y:auto;margin-top:8px;"></div>
+    </div>
   </div>
 </div>
 
@@ -2253,6 +2268,70 @@ async function deleteChat(id){
   }catch(e){}
 }
 
+// ── COMMUNITY: likes + comments on each item ──
+let currentItemId=null;
+function hideEngagement(){ const e=document.getElementById('engagement'); if(e) e.style.display='none'; currentItemId=null; }
+async function loadEngagement(id){
+  currentItemId=id;
+  const eng=document.getElementById('engagement'); if(!eng) return;
+  eng.style.display='block';
+  document.getElementById('comment-error').style.display='none';
+  document.getElementById('comment-input').value='';
+  try{
+    const r=await fetch(API_BASE+'/likes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:(user&&user.token)||'',content_id:String(id)})});
+    const d=await r.json(); setLikeUI(d.liked,d.count);
+  }catch(e){ setLikeUI(false,0); }
+  loadComments();
+}
+function setLikeUI(liked,count){
+  const b=document.getElementById('like-btn');
+  document.getElementById('like-icon').textContent=liked?'♥':'♡';
+  document.getElementById('like-count').textContent=count||0;
+  if(b){ b.style.color=liked?'var(--gold)':'var(--text)'; b.style.borderColor=liked?'var(--gold-dim)':'var(--border)'; }
+}
+async function toggleLike(){
+  if(!user||!user.token||currentItemId==null) return;
+  try{
+    const r=await fetch(API_BASE+'/like-toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:user.token,content_id:String(currentItemId)})});
+    const d=await r.json(); setLikeUI(d.liked,d.count);
+  }catch(e){}
+}
+async function loadComments(){
+  if(currentItemId==null) return;
+  try{
+    const r=await fetch(API_BASE+'/comment-get?content_id='+encodeURIComponent(String(currentItemId)));
+    const d=await r.json();
+    const box=document.getElementById('comments-list'); if(!box) return;
+    const isHost=user&&user.email===HOST_EMAIL;
+    const n=(d.comments||[]).length;
+    document.getElementById('comment-count-label').textContent=n+' comment'+(n===1?'':'s');
+    box.innerHTML=(d.comments||[]).map(c=>{
+      const del=isHost?` <button onclick="deleteComment('${c.id}')" title="Remove" style="background:none;border:none;color:#c94c6a;cursor:pointer;font-size:.72rem;">✕</button>`:'';
+      return `<div style="line-height:1.45;word-break:break-word;"><span style="color:var(--gold-light);font-weight:600;font-size:.84rem;">${escHtml(c.author_name||'Member')}</span>${del}<br/><span style="color:var(--text);font-size:.88rem;">${escHtml(c.message)}</span></div>`;
+    }).join('') || '<div style="color:var(--text-dim);font-size:.84rem;">Be the first to comment.</div>';
+  }catch(e){}
+}
+async function postComment(){
+  if(!user||!user.token||currentItemId==null) return;
+  const input=document.getElementById('comment-input');
+  const msg=(input.value||'').trim();
+  const err=document.getElementById('comment-error'); err.style.display='none';
+  if(!msg) return;
+  try{
+    const r=await fetch(API_BASE+'/comment-add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:user.token,content_id:String(currentItemId),message:msg,name:user.name})});
+    const d=await r.json();
+    if(d.ok){ input.value=''; loadComments(); }
+    else{
+      const m={no_links:"Links aren't allowed in comments.",blocked:'Please keep it PG-13 — that comment was blocked.',slow_down:"You're commenting too fast — give it a few seconds.",duplicate:'You already posted that.',too_long:'Comment is too long.',empty:'Write something first.'};
+      err.textContent=m[d.error]||'Comment could not be posted.'; err.style.display='block';
+    }
+  }catch(e){ err.textContent='Network error. Try again.'; err.style.display='block'; }
+}
+async function deleteComment(id){
+  if(!user||!user.token) return;
+  try{ await fetch(API_BASE+'/comment-delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({t:user.token,id})}); loadComments(); }catch(e){}
+}
+
 // ── RENDER STREAM LIBRARY ──
 function filterContent(type,btn){
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
@@ -2467,6 +2546,7 @@ function openContent(id){
     updatePlayerHeart();
     document.getElementById('audio-art').classList.remove('spinning');
   }
+  loadEngagement(item.id);
   showModal();
 }
 
@@ -2500,6 +2580,7 @@ function openAlbum(album){
       <div class="track-name">${t}</div>
       <div class="track-play-icon"></div>
     </div>`).join('');
+  loadEngagement(album.id);
   showModal();
 }
 
@@ -2546,6 +2627,7 @@ async function openVideo(id){
   document.getElementById('video-view').style.display='flex';
   document.getElementById('video-title').textContent=v.title;
   document.getElementById('video-desc').textContent=v.desc;
+  loadEngagement(v.id);
   const frame=document.getElementById('video-frame');
   const nv=document.getElementById('video-native');
   frame.style.display=''; if(nv){ nv.style.display='none'; nv.src=''; }
@@ -2601,6 +2683,7 @@ function resetModal(){
   document.getElementById('video-frame').src='';
   document.getElementById('video-frame').style.display='';
   const _nv=document.getElementById('video-native'); if(_nv){ try{_nv.pause();}catch(e){} _nv.src=''; _nv.style.display='none'; }
+  hideEngagement();
   document.getElementById('pdf-frame').src='';
   document.getElementById('prev-track-btn').style.display='none';
   document.getElementById('next-track-btn').style.display='none';
